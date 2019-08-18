@@ -1,5 +1,3 @@
-console.log("connected");
-
 
 // let { init } = kontra;
 
