@@ -1,0 +1,23 @@
+{
+  "name": "js13k_back",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "kontra": "^6.2.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/quangthuyhoang/JS13K_BACK.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/quangthuyhoang/JS13K_BACK/issues"
+  },
+  "homepage": "https://github.com/quangthuyhoang/JS13K_BACK#readme"
+}
