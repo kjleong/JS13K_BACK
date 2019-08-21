@@ -4,11 +4,16 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
-    "kontra": "^6.2.3"
+    "kontra": "^6.2.3",
+    "uglify-js": "^1.3.5"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "uglifyjs-webpack-plugin": "^2.2.0"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "uglify": "uglifyjs js/game.js -o dist/js/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack --config prod.config.js"
   },
   "repository": {
     "type": "git",

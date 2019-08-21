@@ -1,0 +1,19 @@
+body {
+background-color: black;
+}
+
+canvas {
+  border: 5px solid blue;
+  width: 100%;
+  max-width: 500px;
+  height: 400px;
+  margin: auto;
+}
+
+#menu {
+  color: white;
+}
+
+li {
+  list-style-type: none;
+}
