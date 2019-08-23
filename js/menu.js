@@ -1,4 +1,12 @@
 //  MENU screeen
+var menu = document.getElementById("menu");
+var toggleBtn = document.getElementById('toggle');
+var game = document.getElementById("game");
+toggleBtn.onclick = function toggleDisplay(){
+  menu.classList.toggle('hide');
+  game.classList.toggle('hide');
+}
+
 let { 
   init, GameLoop,
   initPointer, 
