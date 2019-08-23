@@ -43,24 +43,29 @@ var player = {
   }
 }
 
-function Game ({start, points, stage, currentRoom}) {
+
+function Game ({start, points, stage, currentRoom, win}) {
   this.start = start;
   this.points = points;
   this.stage = stage;
   this.currentRoom = currentRoom;
+  this.win = win;
 }
 
+// basic getter
 function get(element) {
   var state = getStoreItem('state');
   return state[element];
 }
 
+// basic setter
 function set(element, value) {
   var state = getStoreItem('state');
   state[element] = value;
   setStoreItem('state',state);
 }
 
+// Score Model
 Game.prototype.getStart = function(){
   return get('start');
 }
@@ -89,11 +94,13 @@ Game.prototype.getRoom = function(){
 
 
 g1 = new Game(getStoreItem('state'))
+console.log(g1)
 points = g1.getPoints();
-
+console.log("points", points)
 
 g1.incPoints()
 
+console.log('update', g1.getPoints())
 p1 = player;
 
 if(getStoreItem('state') === null) {
