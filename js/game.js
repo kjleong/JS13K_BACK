@@ -1,4 +1,4 @@
-let { init, GameLoop, Sprite, initKeys, keyPressed, bindKeys} = kontra;
+let { init, GameLoop, Sprite, initKeys, keyPressed, bindKeys, SpriteSheet} = kontra;
 let { canvas } = init();
 initKeys();
 // canvas size and position
@@ -10,10 +10,12 @@ canvas.parentElement.style.textAlign = "center";
 let loop = GameLoop({  // create the main game loop
   update: function() { // update the game state
     hero.update();
+    enemy.update();
     wallArray.forEach(wall => wall.update())
   },
   render: function() { // render the game state
     hero.render();
+    enemy.render();
     wallArray.forEach(wall => wall.render())
   }
 });
