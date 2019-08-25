@@ -11,7 +11,7 @@ let hero = Sprite({
     dy: 10,       // move the sprite 2px to the right every frame
     // animations: spriteSheet.animations,
     update: function () {
-
+     
         let touchedWallOn = wallCollision(this,wallArray);
 
         if (keyPressed('left')) {
