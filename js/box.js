@@ -5,8 +5,11 @@ let hero = Sprite({
     color: 'red',  // fill color of the sprite rectangle
     width: 20,     // width and height of the sprite rectangle
     height: 20,
+    rotation: 0,
+    anchor: {x: 0.5, y: 0.5},
     dx: 10,
     dy: 10,       // move the sprite 2px to the right every frame
+    // animations: spriteSheet.animations,
     update: function () {
 
         let touchedWallOn = wallCollision(this,wallArray);
@@ -30,6 +33,11 @@ let hero = Sprite({
             if ((this.y < canvas.height - this.height) && !touchedWallOn.top) {
                 this.y += this.dy;
             }
+        }
+        // ATTACK OPTION
+        if (keyPressed('a')) { // melee
+            this.rotation = this.rotation + 10,
+            console.log("swing!");
         }
     }
 });
