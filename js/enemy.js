@@ -8,23 +8,27 @@ let getEnemySprite = function(x,y,width,height,color='blue') {
       height: height,
   });
 };
-let enemy = Sprite({
-  x: 400,        // starting x,y position of the sprite
-  y: 400,
-  color: 'blue',  // fill color of the sprite rectangle
-  width: 10,     // width and height of the sprite rectangle
-  height: 10,
-  // dx: 10,
-  // dy: 10,       // move the sprite 2px to the right every frame
-  // animations: spriteSheet.animations,
-  update: function () {
 
-      let isTouched = enemyCollision(this, hero);
-    if(isTouched) {
-      console.log("touched", this);
-    }
-  }
-});
+console.log("enemy",e1.getById(1))
+enemy1 = getEnemySprite(e1.getById(1))
+
+// let enemy = Sprite({
+//   x: 400,        // starting x,y position of the sprite
+//   y: 400,
+//   color: 'blue',  // fill color of the sprite rectangle
+//   width: 10,     // width and height of the sprite rectangle
+//   height: 10,
+//   // dx: 10,
+//   // dy: 10,       // move the sprite 2px to the right every frame
+//   // animations: spriteSheet.animations,
+//   update: function () {
+
+//       let isTouched = enemyCollision(this, hero);
+//     if(isTouched) {
+//       console.log("touched", this);
+//     }
+//   }
+// });
 
 
 console.log("hero", hero)
@@ -53,4 +57,4 @@ if (5 < 30 &&
     // collision detected!
 }
 
-enemy.render();
+// enemy.render();
