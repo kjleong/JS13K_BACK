@@ -5,6 +5,7 @@ var game = document.getElementById("game");
 toggleBtn.onclick = function toggleDisplay(){
   menu.classList.toggle('hide');
   game.classList.toggle('hide');
+  loop.start();
 }
 
 let { 
@@ -13,11 +14,20 @@ let {
   track, 
   Sprite, 
   setStoreItem, 
-  getStoreItem 
+  getStoreItem,
+  initKeys,
+  keyPressed,
+  bindKeys 
 } = kontra;
 
-let { canvas } = init();
+initKeys();
 
+let { canvas } = init();
+canvas.width = 600;
+canvas.height = 600;
+canvas.parentElement.style.textAlign = "center";
+
+allSprites = {}
 
 function initState(){
   let state = {
@@ -30,7 +40,6 @@ function initState(){
   };
   setStoreItem('state', state);
 }
-
 
 function Player () {};
 
@@ -79,6 +88,9 @@ Game.prototype.getRoom = function(){
   return get('currentRoom')
 }
 
+if (getStoreItem('state') === null) {
+  initState();
+}
 
 g1 = new Game(getStoreItem('state'))
 console.log(g1)
@@ -90,38 +102,9 @@ g1.incPoints()
 console.log('update', g1.getPoints())
 p1 = player;
 
-if(getStoreItem('state') === null) {
-  initState();
-}
-
 // TODO: need to add on click to menu to update game start and stop
 
 initPointer();
-
-let sprite = Sprite({
-    x: 0,        // starting x,y position of the sprite
-  y: 0,
-  color: 'red',  // fill color of the sprite rectangle
-  width: 100,     // width and height of the sprite rectangle
-  height: 40,
-  onDown: function() {
-    // handle on down events on the sprite
-    console.log("on down")
-  },
-  onUp: function() {
-    // handle on up events on the sprite
-    console.log("on up")
-  },
-  onOver: function() {
-    // handle on over events on the sprite
-    console.log("on over")
-  }
-});
-
-console.log("sprite width", sprite)
-
-track(sprite);
-sprite.render();
 
 
 

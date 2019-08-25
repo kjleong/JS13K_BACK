@@ -76,7 +76,7 @@ let wallCollision = function (sprite,wArray) {
 };
 
 // wrapper for creating a wall sprite
-let getWallSprite = function(x,y,width,height,color='black') {
+let getWallSprite = function(x,y,width,height,color='white') {
     return Sprite({
         x: x,        
         y: y,

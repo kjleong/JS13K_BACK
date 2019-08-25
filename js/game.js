@@ -1,7 +1,4 @@
-let { init, GameLoop, Sprite, initKeys, keyPressed, bindKeys} = kontra;
-let { canvas } = init();
-initKeys();
-// canvas size and position
+
 canvas.width = 600;
 canvas.height = 600;
 canvas.parentElement.style.textAlign = "center";
@@ -18,4 +15,4 @@ let loop = GameLoop({  // create the main game loop
   }
 });
 
-loop.start();    // start the game
+// loop.start();    // start the game
