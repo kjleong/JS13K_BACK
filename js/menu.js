@@ -31,18 +31,16 @@ function initState(){
   setStoreItem('state', state);
 }
 
-var player = {
-  setHealth : function(health){
-    let state = getStoreItem('state');
-    state.health = health;
-    setStoreItem('state', state);
-  },
-  getHealth : function(){
-    let state = getStoreItem('state')
-    return state.health;
-  }
+
+function Player () {};
+
+Player.prototype.getHealth = function(){
+  return get('health');
 }
 
+Player.prototype.setHealth = function(health){
+  set('health',health);
+}
 
 function Game ({start, points, stage, currentRoom, win}) {
   this.start = start;
@@ -52,18 +50,7 @@ function Game ({start, points, stage, currentRoom, win}) {
   this.win = win;
 }
 
-// basic getter
-function get(element) {
-  var state = getStoreItem('state');
-  return state[element];
-}
 
-// basic setter
-function set(element, value) {
-  var state = getStoreItem('state');
-  state[element] = value;
-  setStoreItem('state',state);
-}
 
 // Score Model
 Game.prototype.getStart = function(){
@@ -109,33 +96,6 @@ if(getStoreItem('state') === null) {
 
 // TODO: need to add on click to menu to update game start and stop
 
-
-// let sprite = Sprite({
-//   x: 100,        // starting x,y position of the sprite
-//   y: 80,
-//   color: 'red',  // fill color of the sprite rectangle
-//   width: 20,     // width and height of the sprite rectangle
-//   height: 40,
-//   dx: 2          // move the sprite 2px to the right every frame
-// });
-
-// let loop = GameLoop({  // create the main game loop
-//   update: function() { // update the game state
-//     sprite.update();
-
-//     // wrap the sprites position when it reaches
-//     // the edge of the screen
-//     if (sprite.x > canvas.width) {
-//       sprite.x = -sprite.width;
-//     }
-//   },
-//   render: function() { // render the game state
-//     sprite.render();
-//   }
-// });
-// console.log(initPointer)
-// this function must be called first before pointer
-// functions will work
 initPointer();
 
 let sprite = Sprite({
