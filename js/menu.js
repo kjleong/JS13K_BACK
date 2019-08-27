@@ -23,9 +23,6 @@ let {
 initKeys();
 
 let { canvas } = init();
-canvas.width = 600;
-canvas.height = 600;
-canvas.parentElement.style.textAlign = "center";
 
 allSprites = {}
 
