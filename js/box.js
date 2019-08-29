@@ -201,14 +201,16 @@ class Hero extends Gamepiece {
             }
         }
     }
-    getStats() {
-        return {
-            health:this.health,
-            itemCount:this.itemCount,
-        };
+    getStats(keyList) {
+        let out = {};
+        for (let key of keyList) {
+            if (key in this) {
+                out[key] = this[key];
+            }
+        }
+        return out;
     }
 }
-
 
 class FastGP extends Gamepiece {
     constructor(spriteKey, type, x, y, width, height, color, sprite = Sprite({})) {

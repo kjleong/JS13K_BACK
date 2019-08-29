@@ -48,31 +48,11 @@ let runGameLoopUpdate = function(pieces) {
   }
   hero.blinkEffect(30);
 
-  if (keyPressed('left')) {
-    hero.sprite.dLeft = -10
-  }
-  if (keyPressed('right')) {
-    if ((this.x < canvas.width - this.width)) {
-      this.x += this.dRight;
-    }
-  }
-  if (keyPressed('up')) {
-    if (this.y > 0) {
-      this.y += this.dUp;
-    }
-  }
-  if (keyPressed('down')) {
-    if ((this.y < canvas.height - this.height)) {
-      this.y += this.dDown;
-    }
-  }
-
-
   // update everything else by sprite.update function
   pieces.updateAll();
   pieces.purgePieces();
   
-  console.log('item',hero.getStats());
+  console.log(hero.getStats(['health','itemCount']));
 
 }
 
