@@ -1,18 +1,27 @@
 //Make boundaries
 let makeBasicWalls = function(pieces) {
     let wallThickness = 10;
+    let wallColor = 'white';
     //Canvas Boarder
-    new Wall('w1', 0, 0, canvas.width, wallThickness).addToPieces(pieces);
-    new Wall('w2', 0, 0, wallThickness, canvas.height).addToPieces(pieces);
-    new Wall('w3', 0, canvas.height - wallThickness, canvas.width, wallThickness).addToPieces(pieces);
-    new Wall('w4', canvas.width - wallThickness, 0, wallThickness, canvas.height).addToPieces(pieces);
+    new FastGP('w1', 'wall', 0, 0, canvas.width, wallThickness, wallColor).addToPieces(pieces);
+    new FastGP('w2', 'wall', 0, 0, wallThickness, canvas.height, wallColor).addToPieces(pieces);
+    new FastGP('w3', 'wall', 0, canvas.height - wallThickness, canvas.width, wallThickness, wallColor).addToPieces(pieces);
+    new FastGP('w4', 'wall', canvas.width - wallThickness, 0, wallThickness, canvas.height, wallColor).addToPieces(pieces);
     //status boundary
-    new Wall('w5', 0, 100, canvas.width, wallThickness).addToPieces(pieces);
+    new FastGP('w5', 'wall', 0, 100, canvas.width, wallThickness, wallColor).addToPieces(pieces);
     //tower boundary
-    new Wall('w6', 100, 100, wallThickness, canvas.height - 100).addToPieces(pieces);
+    new FastGP('w6', 'wall', 100, 100, wallThickness, canvas.height - 100, wallColor).addToPieces(pieces);
 }
 
 let sandboxLevel = function (pieces) {
     let hero = pieces.getPiece('hero');
     makeBasicWalls(pieces);
+
+    //test items
+    new FastGP('i_green', 'item', 300, 300, 20, 20,'green').addToPieces(pieces);
+    new FastGP('i_blue', 'item', 200, 200, 20, 20, 'blue').addToPieces(pieces);
+    new FastGP('i_orange', 'item', 400, 300, 20, 20, 'orange').addToPieces(pieces);
+
+    new FastGP('e_white', 'enemy', 500, 400, 20, 20, 'white').addToPieces(pieces);
+
 }

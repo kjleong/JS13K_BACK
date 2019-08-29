@@ -28,23 +28,27 @@ class Allpieces {
         }
     }
 
-    updateAll() {
+    updateAllButHero() {
         for (let key in this.pieces) {
-            this.pieces[key].sprite.update();
+            if (!(this.pieces[key] instanceof Hero)){
+                this.pieces[key].sprite.update();
+            }
         }
     }
 
     renderAll() {
         for (let key in this.pieces) {
-            this.pieces[key].sprite.render();
+            if (this.pieces[key].renderMe) {
+                this.pieces[key].sprite.render();
+            }
         }
     }
 
     getByType(gpType) {
         let somePieces = {};
         for (let key in this.pieces) {
-            gp = this.pieces[key]
-            if (gp instanceof gpType) {
+            let gp = this.pieces[key]
+            if (gp.type === gpType) {
                 somePieces[key] = gp
             }
         }
@@ -53,7 +57,7 @@ class Allpieces {
 
     purgePieces() {
         for (let key in this.pieces) {
-            if (this.pieces[key].destoryMe === true) {
+            if (this.pieces[key].destroyMe) {
                 delete this.pieces[key];
             }
         }
@@ -62,11 +66,17 @@ class Allpieces {
 }
 
 class Gamepiece {
-    constructor(spriteKey, sprite) {
+    constructor(spriteKey, type, sprite) {
         this.sprite = sprite;
         this.spriteKey = spriteKey;
+        this.type = type;
         this.destroyMe = false;
-        this.type = '';
+        this.renderMe = true;
+        this.health = 0;
+        this.dLeft = 0;
+        this.dRight = 0;
+        this.dUp = 0;
+        this.dDown = 0;
     }
 
     getSpriteBoundaries() {
@@ -84,34 +94,35 @@ class Gamepiece {
         let selfBounds = this.getSpriteBoundaries();
         let otherBounds = otherGP.getSpriteBoundaries();
         return {
-            bottom: (selfBounds.bottom === otherBounds.top && selfBounds.left < otherBounds.right && selfBounds.right > otherBounds.left),
-            top: (selfBounds.top === otherBounds.bottom && selfBounds.left < otherBounds.right && selfBounds.right > otherBounds.left),
-            right: (selfBounds.right === otherBounds.left && selfBounds.top < otherBounds.bottom && selfBounds.bottom > otherBounds.top),
-            left: (selfBounds.left === otherBounds.right && selfBounds.top < otherBounds.bottom && selfBounds.bottom > otherBounds.top),
+            top: (selfBounds.bottom === otherBounds.top && selfBounds.left < otherBounds.right && selfBounds.right > otherBounds.left),
+            bottom: (selfBounds.top === otherBounds.bottom && selfBounds.left < otherBounds.right && selfBounds.right > otherBounds.left),
+            left: (selfBounds.right === otherBounds.left && selfBounds.top < otherBounds.bottom && selfBounds.bottom > otherBounds.top),
+            right: (selfBounds.left === otherBounds.right && selfBounds.top < otherBounds.bottom && selfBounds.bottom > otherBounds.top),
         };
     }
-    
-    setSpriteUpdate(newUpdate) {
-        this.sprite.update = newUpdate;
-    }
 
-    gpArrayTouchedOn (gpArray) {
+    touchedOn (gpArray) {
         let gpsTouchedOn = {
             right: false,
             left: false,
             top: false,
             bottom: false
         };
-        gpArray.forEach(function (gp) {
-            gpContectdOnWith = gp.contactedOnWith(this);
+        for (let key in gpArray) {
+            let gp = gpArray[key]
+            let gpContectdOnWith = gp.contactedOnWith(this);
             for (let dirKey in gpContectdOnWith) {
                 if (gpsTouchedOn[dirKey] === false && gpContectdOnWith[dirKey] === true) {
                     gpsTouchedOn[dirKey] = true
                 }
             };
-        });
+        };
         return gpsTouchedOn;
     };
+
+    // kill() {
+    //     this.destroyMe = true;
+    // }
 
     addToPieces(ap) {
         ap.addPiece(this)
@@ -120,55 +131,45 @@ class Gamepiece {
 
 class Hero extends Gamepiece {
     constructor(spriteKey, sprite, health=10) {
-        super(spriteKey, sprite);
+        super(spriteKey,'hero', sprite);
         this.health = health;
-        this.sprite.update = function () {
-            if (keyPressed('left')) {
-                if (this.x > 0) {
-                    this.x -= this.dx;
-                }
-            }
-            if (keyPressed('right')) {
-                if ((this.x < canvas.width - this.width)) {
-                    this.x += this.dx;
-                }
-            }
-            if (keyPressed('up')) {
-                if (this.y > 0) {
-                    this.y -= this.dy;
-                }
-            }
-            if (keyPressed('down')) {
-                if ((this.y < canvas.height - this.height)) {
-                    this.y += this.dy;
+        this.dLeft = -10;
+        this.dRight = 10;
+        this.dUp = -10;
+        this.dDown = 10;
+        this.itemCount = 0;
+        this.invulnerable = false;
+        this.invulnerableCounter = 0.0;
+    }
+
+    blinkEffect(modVal) {
+        if (this.invulnerable) {
+            if (this.invulnerableCounter > 2.0) {
+                this.invulnerable = false
+                this.invulnerableCounter = 0.0;
+                this.renderMe = true;
+            } else {
+                this.invulnerableCounter += 1.0 / 60;
+                if ((this.invulnerableCounter * 60) % modVal < modVal/2) {
+                    this.renderMe = false;
+                } else {
+                    this.renderMe = true;
                 }
             }
         }
     }
-}
-
-class Enemy extends Gamepiece{
-    constructor(spriteKey, sprite, health = 2) {
-        super(spriteKey, sprite);
-        this.health = health;
-
+    getStats() {
+        return {
+            health:this.health,
+            itemCount:this.itemCount,
+        };
     }
 }
 
-class Item extends Gamepiece {
-    constructor(spriteKey, sprite) {
-        super(spriteKey, sprite);
-    }
-}
-class Movable extends Gamepiece {
-    constructor(spriteKey, sprite) {
-        super(spriteKey, sprite);
-    }
-}
 
-class Wall extends Gamepiece {
-    constructor(spriteKey, x, y, width, height, sprite = Sprite({}),color='white') {
-        super(spriteKey, sprite);
+class FastGP extends Gamepiece {
+    constructor(spriteKey, type, x, y, width, height, color, sprite = Sprite({})) {
+        super(spriteKey, type, sprite);
         this.sprite.x = x;
         this.sprite.y = y;
         this.sprite.width = width;
@@ -176,112 +177,3 @@ class Wall extends Gamepiece {
         this.sprite.color = color;
     }
 }
-
-
-// // "hero" sprite
-// let hero = Sprite({
-//     x: 500,        // starting x,y position of the sprite
-//     y: 500,
-//     color: 'red',  // fill color of the sprite rectangle
-//     width: 20,     // width and height of the sprite rectangle
-//     height: 20,
-//     dx: 10,
-//     dy: 10,       // move the sprite 2px to the right every frame
-//     update: function () {
-//         let touchedWallOn = wallCollision(this,wallArray);
-//         if (keyPressed('left')) {
-//             if (this.x > 0 && !touchedWallOn.right) {
-//                 this.x -= this.dx;
-//             }
-//         }
-//         if (keyPressed('right')) {
-//             if ((this.x < canvas.width - this.width) && !touchedWallOn.left) {
-//                 this.x += this.dx;
-//             }
-//         }
-//         if (keyPressed('up')) {
-//             if (this.y > 0 && !touchedWallOn.bottom) {
-//                 this.y -= this.dy;
-//             }
-//         }
-//         if (keyPressed('down')) {
-//             if ((this.y < canvas.height - this.height) && !touchedWallOn.top) {
-//                 this.y += this.dy;
-//             }
-//         }
-//     }
-// });
-
-// //tool to get exact boundaries of a rect sprite
-// let getSpriteBoundaries = function(s) {
-//     return {
-//         top: s.y - s.height * s.anchor.y,
-//         left: s.x - s.width * s.anchor.x,
-//         bottom: (s.y - s.height * s.anchor.y) + s.height * (1-s.anchor.y),
-//         right: (s.x - s.width * s.anchor.x) + s.width * (1-s.anchor.x)
-//     };
-// };
-
-// returns object on the direction a w sprite was touched by s
-// let touchWall = function(s,w) {
-//     let wb = getSpriteBoundaries(w);
-//     let sb = getSpriteBoundaries(s);
-//     return {
-//         top: (selfBounds.bottom === otherBounds.top && selfBounds.left < otherBounds.right && selfBounds.right > otherBounds.left),
-//         bottom: (selfBounds.top === otherBounds.bottom && selfBounds.left < otherBounds.right && selfBounds.right > otherBounds.left),
-//         left: (selfBounds.right === otherBounds.left && selfBounds.top < otherBounds.bottom && selfBounds.bottom > otherBounds.top),
-//         right: (selfBounds.left === otherBounds.right && selfBounds.top < otherBounds.bottom && selfBounds.bottom > otherBounds.top),
-//     };
-// };
-
-// checks collision of all walls in wallArray
-// let wallCollision = function (sprite,wArray) {
-//     var collided = {
-//         right: false,
-//         left: false,
-//         top: false,
-//         bottom: false
-//     };
-//     wArray.forEach(function (wall, index) {
-//         touchedWallOn = touchWall(sprite, wall);
-//         for (let dirKey in touchedWallOn) {
-//             if (collided[dirKey] === false && touchedWallOn[dirKey] === true) {
-//                 collided[dirKey] = true
-//             }
-//         };
-//     });
-//     return collided;
-// };
-
-// // wrapper for creating a wall sprite
-// let getWallSprite = function(x,y,width,height,color='white') {
-//     return Sprite({
-//         x: x,        
-//         y: y,
-//         color: color,  
-//         width: width,     
-//         height: height,
-//     });
-// };
-
-// // testing/implementing walls
-// let wallThickness = 10;
-// let wallArray = [
-//     //walls of canvas
-//     getWallSprite(0, 0, canvas.width, wallThickness),
-//     getWallSprite(0, 0, wallThickness, canvas.height),
-//     getWallSprite(0, canvas.height-wallThickness, canvas.width, wallThickness),
-//     getWallSprite(canvas.width - wallThickness, 0, wallThickness, canvas.height),
-
-//     //status boundary
-//     getWallSprite(0, 100, canvas.width, wallThickness),
-
-//     //tower area
-//     getWallSprite(100, 100, wallThickness, canvas.height-100),
-
-//     //test walls
-//     getWallSprite(200, 350, 300, wallThickness),
-//     getWallSprite(350, 200, wallThickness, 300),
-
-// ];
-
