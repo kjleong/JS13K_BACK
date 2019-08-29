@@ -36,6 +36,12 @@ class Allpieces {
         }
     }
 
+    updateAll() {
+        for (let key in this.pieces) {
+            this.pieces[key].sprite.update();
+        }
+    }
+
     renderAll() {
         for (let key in this.pieces) {
             if (this.pieces[key].renderMe) {
@@ -73,10 +79,16 @@ class Gamepiece {
         this.destroyMe = false;
         this.renderMe = true;
         this.health = 0;
-        this.dLeft = 0;
-        this.dRight = 0;
-        this.dUp = 0;
-        this.dDown = 0;
+        this.sprite.dLeft = 0;
+        this.sprite.dRight = 0;
+        this.sprite.dUp = 0;
+        this.sprite.dDown = 0;
+        this.sprite.stopMove = {
+            left: false,
+            right: false,
+            down: false,
+            up: false,
+        };
     }
 
     getSpriteBoundaries() {
@@ -94,8 +106,8 @@ class Gamepiece {
         let selfBounds = this.getSpriteBoundaries();
         let otherBounds = otherGP.getSpriteBoundaries();
         return {
-            top: (selfBounds.bottom === otherBounds.top && selfBounds.left < otherBounds.right && selfBounds.right > otherBounds.left),
-            bottom: (selfBounds.top === otherBounds.bottom && selfBounds.left < otherBounds.right && selfBounds.right > otherBounds.left),
+            up: (selfBounds.bottom === otherBounds.top && selfBounds.left < otherBounds.right && selfBounds.right > otherBounds.left),
+            down: (selfBounds.top === otherBounds.bottom && selfBounds.left < otherBounds.right && selfBounds.right > otherBounds.left),
             left: (selfBounds.right === otherBounds.left && selfBounds.top < otherBounds.bottom && selfBounds.bottom > otherBounds.top),
             right: (selfBounds.left === otherBounds.right && selfBounds.top < otherBounds.bottom && selfBounds.bottom > otherBounds.top),
         };
@@ -105,8 +117,8 @@ class Gamepiece {
         let gpsTouchedOn = {
             right: false,
             left: false,
-            top: false,
-            bottom: false
+            up: false,
+            down: false
         };
         for (let key in gpArray) {
             let gp = gpArray[key]
@@ -120,9 +132,15 @@ class Gamepiece {
         return gpsTouchedOn;
     };
 
-    // kill() {
-    //     this.destroyMe = true;
-    // }
+    setStopMove(stopObj){
+        for (let key in stopObj) {
+            this.sprite.stopMove[key] = stopObj[key]
+        }
+    }
+
+    kill() {
+        this.destroyMe = true;
+    }
 
     addToPieces(ap) {
         ap.addPiece(this)
@@ -133,13 +151,38 @@ class Hero extends Gamepiece {
     constructor(spriteKey, sprite, health=10) {
         super(spriteKey,'hero', sprite);
         this.health = health;
-        this.dLeft = -10;
-        this.dRight = 10;
-        this.dUp = -10;
-        this.dDown = 10;
         this.itemCount = 0;
         this.invulnerable = false;
         this.invulnerableCounter = 0.0;
+
+        this.sprite.dLeft = -10;
+        this.sprite.dRight = 10;
+        this.sprite.dUp = -10;
+        this.sprite.dDown = 10;
+        this.sprite.update = this.spriteUpdate;
+    }
+
+    spriteUpdate() {
+        if (keyPressed('left') && !this.stopMove.left) {
+            if (this.x > 0) {
+                this.x += this.dLeft;
+            }
+        }
+        if (keyPressed('right') && !this.stopMove.right) {
+            if ((this.x < canvas.width - this.width)) {
+                this.x += this.dRight;
+            }
+        }
+        if (keyPressed('up') && !this.stopMove.up) {
+            if (this.y > 0) {
+                this.y += this.dUp;
+            }
+        }
+        if (keyPressed('down') && !this.stopMove.down) {
+            if ((this.y < canvas.height - this.height)) {
+                this.y += this.dDown;
+            }
+        }
     }
 
     blinkEffect(modVal) {

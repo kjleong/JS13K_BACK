@@ -27,14 +27,14 @@ let runGameLoopUpdate = function(pieces) {
   let enemyPieces = pieces.getByType('enemy');
 
   //define what would stop hero's movements
-  let heroStop = hero.touchedOn(wallPieces);
+  hero.setStopMove(hero.touchedOn(wallPieces));
 
   //pickup item interaction
   for (let key in itemPieces) {
     let item = itemPieces[key]
     if (hero.sprite.collidesWith(item.sprite)) {
       hero.itemCount += 1;
-      item.destroyMe = true;
+      item.kill();
     }
   }
 
@@ -48,29 +48,28 @@ let runGameLoopUpdate = function(pieces) {
   }
   hero.blinkEffect(30);
 
-  //defining hero update here so it can interact with stuff
-  if (keyPressed('left') && !heroStop.left) {
-    if (hero.sprite.x > 0) {
-      hero.sprite.x += hero.dLeft;
+  if (keyPressed('left')) {
+    hero.sprite.dLeft = -10
+  }
+  if (keyPressed('right')) {
+    if ((this.x < canvas.width - this.width)) {
+      this.x += this.dRight;
     }
   }
-  if (keyPressed('right') && !heroStop.right) {
-    if ((hero.sprite.x < canvas.width - hero.sprite.width)) {
-      hero.sprite.x += hero.dRight;
+  if (keyPressed('up')) {
+    if (this.y > 0) {
+      this.y += this.dUp;
     }
   }
-  if (keyPressed('up') && !heroStop.top) {
-    if (hero.sprite.y > 0) {
-      hero.sprite.y += hero.dUp;
+  if (keyPressed('down')) {
+    if ((this.y < canvas.height - this.height)) {
+      this.y += this.dDown;
     }
   }
-  if (keyPressed('down') && !heroStop.bottom) {
-    if ((hero.sprite.y < canvas.height - hero.sprite.height)) {
-      hero.sprite.y += hero.dDown;
-    }
-  }
+
+
   // update everything else by sprite.update function
-  pieces.updateAllButHero();
+  pieces.updateAll();
   pieces.purgePieces();
   
   console.log('item',hero.getStats());
