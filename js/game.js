@@ -15,6 +15,8 @@ let hero = new Hero('hero', Sprite({
 hero.addToPieces(pieces)
 hero.health = 10;
 
+
+
 //Levels (will be controlled by state)
 sandboxLevel(pieces)
 

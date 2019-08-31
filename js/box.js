@@ -222,3 +222,34 @@ class FastGP extends Gamepiece {
         this.sprite.color = color;
     }
 }
+
+class Enemy extends Gamepiece {
+    constructor(spriteKey, type, x, y, width, height, color, sprite = Sprite({})) {
+        super(spriteKey, type, sprite);
+        this.sprite.x = x;
+        this.sprite.y = y;
+        this.sprite.width = width;
+        this.sprite.height = height;
+        this.sprite.color = color;
+        this.sprite.movement = 'horizontal';
+        this.sprite.positiveDirection = true;
+        this.sprite.delta = 5;
+        this.sprite.minRange = x - 10;
+        this.sprite.maxRange = x + 100;
+        this.sprite.update = this.spriteUpdate;
+    }
+
+    updateMovementTo()
+
+    spriteUpdate() { // moves back and forth based on vertical or horizontal or stands still
+        if (this.x == this.maxRange || this.x == this.maxRange - 200) {
+            this.positiveDirection = !this.positiveDirection;
+        }
+        if (this.positiveDirection) {
+            this.x += this.delta;
+        }
+        if (!this.positiveDirection) {
+            this.x -= this.delta;
+        }
+    }
+}
