@@ -31,6 +31,25 @@ let runGameLoopUpdate = function(pieces) {
   //define what would stop hero's movements
   hero.setStopMove(hero.touchedOn(wallPieces));
 
+  // define when enemy movement stops
+  Object.values(enemyPieces).forEach(e => {
+    e.setStopMove(e.touchedOn(itemPieces))
+    // e.setStopMove(e.touchedOn(enemyPieces))
+    e.setStopMove(e.touchedOn(wallPieces))
+  })
+
+  // Object.values(enemyPieces).forEach(e => {
+  //   e.setStopMove(e.touchedOn(enemyPieces))
+  // })
+
+  // Object.values(enemyPieces).forEach(e => {
+  //   e.setStopMove(e.touchedOn(wallPieces))
+  // })
+
+  
+
+  
+
   //pickup item interaction
   for (let key in itemPieces) {
     let item = itemPieces[key]

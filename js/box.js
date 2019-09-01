@@ -234,15 +234,28 @@ class Enemy extends Gamepiece {
         this.sprite.movement = 'horizontal';
         this.sprite.positiveDirection = true;
         this.sprite.delta = 5;
-        this.sprite.minRange = x - 10;
-        this.sprite.maxRange = x + 100;
-        this.sprite.update = this.spriteUpdate;
+        this.sprite.minHor = x - 100;
+        this.sprite.maxHor = x + 100;
+        this.sprite.minVer = y - 100;
+        this.sprite.minVer = y + 100;
+        this.sprite.update = this.verticalMovement;
     }
 
-    updateMovementTo()
+    updateMovementTo(type) {
+        switch(type) {
+            case 'horizontal': {
+                this.sprite.update = this.horizontalMovement;
+                break;
+            }
+            case 'veritical': {
+                this.sprite.update = this.verticalMovement;
+                break;
+            }
+        }
+    }
 
-    spriteUpdate() { // moves back and forth based on vertical or horizontal or stands still
-        if (this.x == this.maxRange || this.x == this.maxRange - 200) {
+    horizontalMovement() { // moves back and forth based on vertical or horizontal or stands still
+        if (this.x == this.maxHor || this.x == this.minHor) {
             this.positiveDirection = !this.positiveDirection;
         }
         if (this.positiveDirection) {
@@ -250,6 +263,23 @@ class Enemy extends Gamepiece {
         }
         if (!this.positiveDirection) {
             this.x -= this.delta;
+        }
+    }
+
+    verticalMovement() { // moves back and forth based on vertical or horizontal or stands still
+        if (this.y == this.maxVer || this.y == this.minVer || 
+            (this.stopMove.down ||  this.stopMove.up)
+            ) {
+
+            console.log(this.stopMove)
+            this.positiveDirection = !this.positiveDirection;
+        }
+        if (this.positiveDirection) {
+            this.y += this.delta;
+        }
+        if (!this.positiveDirection) {
+            // console.log("stop move", this.stopMove.up)
+            this.y -= this.delta;
         }
     }
 }
