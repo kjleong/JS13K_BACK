@@ -31,24 +31,15 @@ let runGameLoopUpdate = function(pieces) {
   //define what would stop hero's movements
   hero.setStopMove(hero.touchedOn(wallPieces));
 
-  // define when enemy movement stops
+  // define when enemy movement -- buggy due to ignore mutliple setStopMove 
+  // TODO: need to figure out why its apply multiple setStopmove
+
   Object.values(enemyPieces).forEach(e => {
-    e.setStopMove(e.touchedOn(itemPieces))
+    e.setStopMove(e.touchedOn(itemPieces)) // ignores first couple lines 
+    e.setStopMove(e.touchedOn(wallPieces)) // only apply the last touched item setSTopmove here
     // e.setStopMove(e.touchedOn(enemyPieces))
-    e.setStopMove(e.touchedOn(wallPieces))
+   
   })
-
-  // Object.values(enemyPieces).forEach(e => {
-  //   e.setStopMove(e.touchedOn(enemyPieces))
-  // })
-
-  // Object.values(enemyPieces).forEach(e => {
-  //   e.setStopMove(e.touchedOn(wallPieces))
-  // })
-
-  
-
-  
 
   //pickup item interaction
   for (let key in itemPieces) {
@@ -68,12 +59,11 @@ let runGameLoopUpdate = function(pieces) {
     }
   }
   hero.blinkEffect(30);
-
   // update everything else by sprite.update function
   pieces.updateAll();
   pieces.purgePieces();
   
-  console.log(hero.getStats(['health','itemCount']));
+  // console.log(hero.getStats(['health','itemCount']));
 
 }
 

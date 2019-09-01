@@ -129,6 +129,7 @@ class Gamepiece {
                 }
             };
         };
+        
         return gpsTouchedOn;
     };
 
@@ -224,7 +225,7 @@ class FastGP extends Gamepiece {
 }
 
 class Enemy extends Gamepiece {
-    constructor(spriteKey, type, x, y, width, height, color, sprite = Sprite({})) {
+    constructor(spriteKey, type, x, y, width, height, color, moveType, sprite = Sprite({})) {
         super(spriteKey, type, sprite);
         this.sprite.x = x;
         this.sprite.y = y;
@@ -233,29 +234,28 @@ class Enemy extends Gamepiece {
         this.sprite.color = color;
         this.sprite.movement = 'horizontal';
         this.sprite.positiveDirection = true;
-        this.sprite.delta = 5;
+        this.sprite.delta = 1;
         this.sprite.minHor = x - 100;
         this.sprite.maxHor = x + 100;
         this.sprite.minVer = y - 100;
-        this.sprite.minVer = y + 100;
-        this.sprite.update = this.verticalMovement;
+        this.sprite.maxVer = y + 100;
+        this.sprite.update = this.updateMovementTo(moveType);
     }
 
     updateMovementTo(type) {
         switch(type) {
             case 'horizontal': {
-                this.sprite.update = this.horizontalMovement;
-                break;
+                return this.horizontalMovement;
             }
             case 'veritical': {
-                this.sprite.update = this.verticalMovement;
-                break;
+                return this.verticalMovement;
             }
         }
     }
 
     horizontalMovement() { // moves back and forth based on vertical or horizontal or stands still
-        if (this.x == this.maxHor || this.x == this.minHor) {
+        if (this.x >= this.maxHor || this.x <= this.minHor || 
+            (this.stopMove.left ||  this.stopMove.right)) {
             this.positiveDirection = !this.positiveDirection;
         }
         if (this.positiveDirection) {
@@ -267,18 +267,15 @@ class Enemy extends Gamepiece {
     }
 
     verticalMovement() { // moves back and forth based on vertical or horizontal or stands still
-        if (this.y == this.maxVer || this.y == this.minVer || 
+        if (this.y >= this.maxVer || this.y <= this.minVer || 
             (this.stopMove.down ||  this.stopMove.up)
             ) {
-
-            console.log(this.stopMove)
             this.positiveDirection = !this.positiveDirection;
         }
         if (this.positiveDirection) {
             this.y += this.delta;
         }
         if (!this.positiveDirection) {
-            // console.log("stop move", this.stopMove.up)
             this.y -= this.delta;
         }
     }
