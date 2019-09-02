@@ -1,3 +1,4 @@
+
 //define canvas area
 canvas.width = 600;
 canvas.height = 600;
@@ -17,6 +18,37 @@ hero.health = 10;
 
 
 
+// Event Call backs
+function moveSword(p) {
+  let { hero, sword } = p.pieces;
+  if(sword == undefined) {
+    sword = new Sword('sword', 'item',hero.sprite.x + hero.sprite.width, hero.sprite.y);
+    sword.addToPieces(pieces)
+
+  } else if(sword && sword.renderMe && sword.renderTime > 0) { // keep render
+
+    // sword.sprite.x = hero.sprite.y + hero.sprite.height;
+    sword.updatePosition(hero.sprite)
+  
+  } else if (sword && sword.renderMe && sword.renderTime >= 0) { // switch off
+    // sword.kill();
+    
+    
+  // } else if (sword && sword.renderMe && hero.sprite.direction == 'up') {
+  //   console.log('up')
+  //   sword.sprite.x = hero.sprite.x + hero.sprite.width;
+  }
+  // else {
+    
+  //   console.log('show sword', sword.renderTime)
+  // }
+  
+};
+
+on('swing',moveSword);
+// console.log(on, emit)
+
+
 //Levels (will be controlled by state)
 sandboxLevel(pieces)
 
@@ -27,6 +59,7 @@ let runGameLoopUpdate = function(pieces) {
   let wallPieces = pieces.getByType('wall');
   let itemPieces = pieces.getByType('item');
   let enemyPieces = pieces.getByType('enemy');
+  let swordPiece = itemPieces['sword'];
 
   //define what would stop hero's movements
   hero.setStopMove(hero.touchedOn(wallPieces));
@@ -56,9 +89,20 @@ let runGameLoopUpdate = function(pieces) {
     if (hero.sprite.collidesWith(enemy.sprite) && !hero.invulnerable) {
       hero.health -= 1;
       hero.invulnerable = true;
+      enemy.kill();
     }
   }
   hero.blinkEffect(30);
+  
+// update sword swing -- paused to test movement
+  if (swordPiece) {
+    if (swordPiece.renderTime >= 0) {
+      swordPiece.renderTime = swordPiece.renderTime - 1.0/60;
+    } else {
+      // swordPiece.kill();
+      swordPiece.renderTime = 2.0;
+    }
+  }
   // update everything else by sprite.update function
   pieces.updateAll();
   pieces.purgePieces();

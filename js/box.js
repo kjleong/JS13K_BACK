@@ -155,36 +155,65 @@ class Hero extends Gamepiece {
         this.itemCount = 0;
         this.invulnerable = false;
         this.invulnerableCounter = 0.0;
-
         this.sprite.dLeft = -10;
         this.sprite.dRight = 10;
         this.sprite.dUp = -10;
         this.sprite.dDown = 10;
         this.sprite.update = this.spriteUpdate;
+        this.sprite.direction = 'up';
     }
 
     spriteUpdate() {
         if (keyPressed('left') && !this.stopMove.left) {
             if (this.x > 0) {
                 this.x += this.dLeft;
+                this.direction = 'left';
+                emit('swing', pieces)
+                // new FastGP('i_white', 'item', this.x - this.width, this.y, 20, 20, 'white').addToPieces(pieces);
+
             }
         }
         if (keyPressed('right') && !this.stopMove.right) {
             if ((this.x < canvas.width - this.width)) {
                 this.x += this.dRight;
+                this.direction = 'right';
+                emit('swing', pieces)
+                // new FastGP('i_white', 'item', this.x + this.width, this.y, 20, 20, 'white').addToPieces(pieces);
+
             }
         }
         if (keyPressed('up') && !this.stopMove.up) {
             if (this.y > 0) {
                 this.y += this.dUp;
+                this.direction = 'up';
+                emit('swing', pieces)
+                // new FastGP('i_white', 'item', this.x , this.y - this.height, 20, 20, 'white').addToPieces(pieces);
+
             }
         }
         if (keyPressed('down') && !this.stopMove.down) {
             if ((this.y < canvas.height - this.height)) {
                 this.y += this.dDown;
+                this.direction = 'down';
+                emit('swing', pieces)
+                // new FastGP('i_white', 'item', this.x, this.y + this.height, 20, 20, 'white').addToPieces(pieces);
+
             }
         }
+        // Create hero killing space / sword slash range
+        if (keyPressed('a')) {
+            emit('swing', pieces)
+            // this.swordSwingStatus = !this.swordSwingStatus;
+            // console.log(this.swordSwingStatus)
+            // this.createSword();
+
+        }
     }
+
+    createSword(pieces) {
+        new FastGP('i_white', 'item', this.x, this.y + this.height, 20, 20, 'white').addToPieces(pieces);
+    }
+
 
     blinkEffect(modVal) {
         if (this.invulnerable) {
@@ -221,6 +250,51 @@ class FastGP extends Gamepiece {
         this.sprite.width = width;
         this.sprite.height = height;
         this.sprite.color = color;
+    }
+}
+
+class Sword extends Gamepiece {
+    constructor(spriteKey, type, x, y, sprite = Sprite({})) {
+        super(spriteKey, type, sprite);
+        this.sprite.x = x;
+        this.sprite.y = y;
+        this.sprite.width = 20;
+        this.sprite.height = 20;
+        this.sprite.color = 'white';
+        this.renderTime = 2.0;
+    }
+
+    updateSword(){ // sword "animation time"
+        if(this.renderMe && this.renderTime <= 0) {
+            this.renderMe = false;
+            this.renderTime = 2.0;
+        }
+        if(this.renderMe && this.renderTime > 0) {
+            this.renderTime = this.renderTime - 1/60;
+        }
+    }
+
+    updatePosition({x, y, width, height, direction}) { // moves the sword towards direction hero is facing
+        switch(direction) {
+            case 'up':
+                this.sprite.x = x;
+                this.sprite.y = y - height;
+                break;
+            case 'down':
+                this.sprite.x = x;
+                this.sprite.y = y + height;
+                break;
+            case 'right':
+                this.sprite.x = x + width;
+                this.sprite.y = y ;
+                break;
+            case 'left':
+                this.sprite.x = x - width;
+                this.sprite.y = y ;
+                break;
+            default:
+                break;
+        }
     }
 }
 

@@ -17,7 +17,9 @@ let {
   getStoreItem,
   initKeys,
   keyPressed,
-  bindKeys 
+  bindKeys,
+  on,
+  emit
 } = kontra;
 
 initKeys();
