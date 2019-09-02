@@ -25,9 +25,26 @@ let runGameLoopUpdate = function(pieces) {
   let wallPieces = pieces.getByType('wall');
   let itemPieces = pieces.getByType('item');
   let enemyPieces = pieces.getByType('enemy');
+  let movePieces = pieces.getByType('move');
+  let immovablePieces = {};
+  let movablePieces = {}
 
-  //define what would stop hero's movements
-  hero.setStopMove(hero.touchedOn(wallPieces));
+  for (let key in movePieces) {
+    let move = movePieces[key];
+    let moveEnable = false;
+    if (anyDirTrue(hero.contactedOnWith(move))) {
+      if (hero.getMoveAbilityStatus()) {
+        moveEnable = true;
+      }
+    }
+    if (!moveEnable){
+      immovablePieces[key] = move;
+      move.disableMovement();
+    } else {
+      movablePieces[key] = move;
+      move.enableMovement()
+    }
+  }
 
   //pickup item interaction
   for (let key in itemPieces) {
@@ -48,11 +65,23 @@ let runGameLoopUpdate = function(pieces) {
   }
   hero.blinkEffect(30);
 
+  //define what would stop movements
+  for (let key in movablePieces) {
+    let move = movablePieces[key];
+    move.setStopMove(move.touchedOn({...wallPieces, ...immovablePieces }));
+    if (anyDirTrue(move.getStopMove())){
+      immovablePieces[move.spriteKey] = move;
+    }
+    move.setStopMove(move.touchedOn({ ...wallPieces, ...immovablePieces }));
+  }
+  hero.setStopMove(hero.touchedOn({ ...wallPieces, ...immovablePieces }));
+
   // update everything else by sprite.update function
   pieces.updateAll();
   pieces.purgePieces();
   
   console.log(hero.getStats(['health','itemCount']));
+  console.log(hero.getMoveAbilityStatus());
 
 }
 

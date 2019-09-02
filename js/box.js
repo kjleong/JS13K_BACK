@@ -138,6 +138,10 @@ class Gamepiece {
         }
     }
 
+    getStopMove() {
+        return this.sprite.stopMove;
+    }
+
     kill() {
         this.destroyMe = true;
     }
@@ -159,10 +163,12 @@ class Hero extends Gamepiece {
         this.sprite.dRight = 10;
         this.sprite.dUp = -10;
         this.sprite.dDown = 10;
+        this.sprite.moveAbility = false;
         this.sprite.update = this.spriteUpdate;
     }
 
     spriteUpdate() {
+        this.moveAbility = false;
         if (keyPressed('left') && !this.stopMove.left) {
             if (this.x > 0) {
                 this.x += this.dLeft;
@@ -183,6 +189,13 @@ class Hero extends Gamepiece {
                 this.y += this.dDown;
             }
         }
+        if (keyPressed('z')) {
+            this.moveAbility = true;
+        }
+    }
+
+    getMoveAbilityStatus() {
+        return this.sprite.moveAbility;
     }
 
     blinkEffect(modVal) {
@@ -212,6 +225,68 @@ class Hero extends Gamepiece {
     }
 }
 
+class Move extends Gamepiece {
+    constructor(spriteKey,  x, y, width, height, color, sprite = Sprite({})) {
+        super(spriteKey, 'move', sprite);
+        this.sprite.x = x;
+        this.sprite.y = y;
+        this.sprite.width = width;
+        this.sprite.height = height;
+        this.sprite.color = color;
+        this.sprite.enableMove = false;
+        this.sprite.update = this.spriteUpdate;
+    }
+
+    spriteUpdate() {
+        if (this.enableMove) {
+            if (keyPressed('left') && !this.stopMove.left) {
+                if (this.x > 0) {
+                    this.x += this.dLeft;
+                }
+            }
+            if (keyPressed('right') && !this.stopMove.right) {
+                if ((this.x < canvas.width - this.width)) {
+                    this.x += this.dRight;
+                }
+            }
+            if (keyPressed('up') && !this.stopMove.up) {
+                if (this.y > 0) {
+                    this.y += this.dUp;
+                }
+            }
+            if (keyPressed('down') && !this.stopMove.down) {
+                if ((this.y < canvas.height - this.height)) {
+                    this.y += this.dDown;
+                }
+            }
+        }
+    }
+
+    setSpeed(x) {
+        this.sprite.dLeft = -x;
+        this.sprite.dRight = x;
+        this.sprite.dUp = -x;
+        this.sprite.dDown = x;
+    }
+
+    enableMovement() {
+        this.sprite.enableMove = true;
+        this.setSpeed(10);
+    }
+
+    disableMovement(){
+        this.sprite.enableMove = false;
+        this.setSpeed(0);
+    }
+
+    setSpeed(x) {
+        this.sprite.dLeft = -x;
+        this.sprite.dRight = x;
+        this.sprite.dUp = -x;
+        this.sprite.dDown = x;
+    }
+}
+
 class FastGP extends Gamepiece {
     constructor(spriteKey, type, x, y, width, height, color, sprite = Sprite({})) {
         super(spriteKey, type, sprite);
@@ -222,3 +297,10 @@ class FastGP extends Gamepiece {
         this.sprite.color = color;
     }
 }
+
+//util functions
+function anyDirTrue(c) {
+    return Object.keys(c).map(function (key) { return c[key] }).some((x) => { return x })
+}
+
+

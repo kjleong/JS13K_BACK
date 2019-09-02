@@ -19,9 +19,12 @@ let sandboxLevel = function (pieces) {
 
     //test items
     new FastGP('i_green', 'item', 300, 300, 20, 20,'green').addToPieces(pieces);
-    new FastGP('i_blue', 'item', 200, 200, 20, 20, 'blue').addToPieces(pieces);
     new FastGP('i_orange', 'item', 400, 300, 20, 20, 'orange').addToPieces(pieces);
 
     new FastGP('e_white', 'enemy', 500, 400, 20, 20, 'white').addToPieces(pieces);
+
+    new Move('i_purple',  200, 300, 20, 20, 'purple').addToPieces(pieces);
+    new Move('i_blue',  200, 200, 20, 20, 'blue').addToPieces(pieces);
+
 
 }
