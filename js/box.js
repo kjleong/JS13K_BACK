@@ -225,20 +225,20 @@ class FastGP extends Gamepiece {
 }
 
 class Enemy extends Gamepiece {
-    constructor(spriteKey, type, x, y, width, height, color, moveType, sprite = Sprite({})) {
+    constructor(spriteKey, type, x, y, width, height, color, moveType, range = 100, delta = 1, sprite = Sprite({})) {
         super(spriteKey, type, sprite);
         this.sprite.x = x;
         this.sprite.y = y;
         this.sprite.width = width;
         this.sprite.height = height;
         this.sprite.color = color;
-        this.sprite.movement = 'horizontal';
+        this.sprite.movement = moveType;
         this.sprite.positiveDirection = true;
-        this.sprite.delta = 1;
-        this.sprite.minHor = x - 100;
-        this.sprite.maxHor = x + 100;
-        this.sprite.minVer = y - 100;
-        this.sprite.maxVer = y + 100;
+        this.sprite.delta = delta;
+        this.sprite.minHor = x - range;
+        this.sprite.maxHor = x + range;
+        this.sprite.minVer = y - range;
+        this.sprite.maxVer = y + range;
         this.sprite.update = this.updateMovementTo(moveType);
     }
 
@@ -247,7 +247,7 @@ class Enemy extends Gamepiece {
             case 'horizontal': {
                 return this.horizontalMovement;
             }
-            case 'veritical': {
+            case 'vertical': {
                 return this.verticalMovement;
             }
         }
