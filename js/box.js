@@ -1,3 +1,30 @@
+//util functions
+function anyDirTrue(c) {
+    return Object.keys(c).map(function (key) { return c[key] }).some((x) => { return x })
+}
+
+class Game {
+    constructor () {
+        this.start = false;
+        this.floor = 12;
+        this.win = false;
+        this.enemiesKilled = 0;
+        this.timer = 0.0;
+    }
+
+    updateTimer() {
+        this.timer += 1.0/(60*60);
+    }
+
+    getTimeMin() {
+        return ('0' +Math.floor(this.timer)).slice(-2);
+    }
+
+    getTimeSec(){
+        return ('0'+Math.floor(this.timer*60) % 60).slice(-2);
+    }
+}
+
 class Allpieces {
     constructor () {
         this.pieces = {};
@@ -39,6 +66,7 @@ class Allpieces {
     updateAll() {
         for (let key in this.pieces) {
             this.pieces[key].sprite.update();
+            this.pieces[key].resetStopMove();
         }
     }
 
@@ -113,6 +141,15 @@ class Gamepiece {
         };
     }
 
+    resetStopMove() {
+        this.sprite.stopMove = {
+            left: false,
+            right: false,
+            down: false,
+            up: false,
+        };
+    }
+
     touchedOn (gpArray) {
         let gpsTouchedOn = {
             right: false,
@@ -135,9 +172,21 @@ class Gamepiece {
 
     setStopMove(stopObj){
         for (let key in stopObj) {
-            this.sprite.stopMove[key] = stopObj[key]
+            this.sprite.stopMove[key] = stopObj[key];
         }
     }
+
+    getStopMove() {
+        return this.sprite.stopMove;
+    }
+
+    updateStopMove(stopObj,stopStatus){
+        for (let key in stopObj) {
+            if (stopObj[key] === stopStatus) {
+                this.sprite.stopMove[key] = stopObj[key];
+            }
+        }
+    } 
 
     kill() {
         this.destroyMe = true;
@@ -159,12 +208,15 @@ class Hero extends Gamepiece {
         this.sprite.dRight = 5;
         this.sprite.dUp = -5;
         this.sprite.dDown = 5;
+        this.sprite.moveAbility = false;
+        this.sprite.hasMovePiece = false;
         this.sprite.update = this.spriteUpdate;
         this.sprite.direction = 'up'; // new for direction melee
         this.sprite.attack = false; // new for melee attack
     }
 
     spriteUpdate() {
+        this.moveAbility = false;
         if (keyPressed('left') && !this.stopMove.left) {
             if (this.x > 0) {
                 this.x += this.dLeft;
@@ -193,11 +245,18 @@ class Hero extends Gamepiece {
                 emit('melee', pieces);
             }
         }
+        if (keyPressed('z')) {
+            this.moveAbility = true;
+        }
         // Create hero killing space / sword slash range
-        if (keyPressed('a')|| keyPressed('space')) {
+        if (keyPressed('a') || keyPressed('space')) {
             this.attack = !this.attack;
             emit('melee', pieces);
         }
+    }
+
+    getMoveAbilityStatus() {
+        return this.sprite.moveAbility;
     }
 
     blinkEffect(modVal) {
@@ -224,6 +283,68 @@ class Hero extends Gamepiece {
             }
         }
         return out;
+    }
+}
+
+class Move extends Gamepiece {
+    constructor(spriteKey,  x, y, width, height, color, sprite = Sprite({})) {
+        super(spriteKey, 'move', sprite);
+        this.sprite.x = x;
+        this.sprite.y = y;
+        this.sprite.width = width;
+        this.sprite.height = height;
+        this.sprite.color = color;
+        this.sprite.enableMove = false;
+        this.sprite.update = this.spriteUpdate;
+    }
+
+    spriteUpdate() {
+        if (this.enableMove) {
+            if (keyPressed('left') && !this.stopMove.left) {
+                if (this.x > 0) {
+                    this.x += this.dLeft;
+                }
+            }
+            if (keyPressed('right') && !this.stopMove.right) {
+                if ((this.x < canvas.width - this.width)) {
+                    this.x += this.dRight;
+                }
+            }
+            if (keyPressed('up') && !this.stopMove.up) {
+                if (this.y > 0) {
+                    this.y += this.dUp;
+                }
+            }
+            if (keyPressed('down') && !this.stopMove.down) {
+                if ((this.y < canvas.height - this.height)) {
+                    this.y += this.dDown;
+                }
+            }
+        }
+    }
+
+    setSpeed(x) {
+        this.sprite.dLeft = -x;
+        this.sprite.dRight = x;
+        this.sprite.dUp = -x;
+        this.sprite.dDown = x;
+    }
+
+    enableMovement() {
+        this.sprite.enableMove = true;
+        this.setSpeed(10);
+    }
+
+    disableMovement(){
+        this.sprite.enableMove = false;
+        this.setSpeed(0);
+    }
+
+    setSpeed(x) {
+        this.sprite.dLeft = -x;
+        this.sprite.dRight = x;
+        this.sprite.dUp = -x;
+        this.sprite.dDown = x;
     }
 }
 

@@ -45,10 +45,27 @@ let runGameLoopUpdate = function(pieces) {
   let wallPieces = pieces.getByType('wall');
   let itemPieces = pieces.getByType('item');
   let enemyPieces = pieces.getByType('enemy');
+  let movePieces = pieces.getByType('move');
+  let immovablePieces = {};
+  let movablePieces = {}
   let swordPiece = itemPieces['sword'];
 
-  //define what would stop hero's movements
-  hero.setStopMove(hero.touchedOn(wallPieces));
+  for (let key in movePieces) {
+    let move = movePieces[key];
+    let moveEnable = false;
+    if (anyDirTrue(hero.contactedOnWith(move))) {
+      if (hero.getMoveAbilityStatus()) {
+        moveEnable = true;
+      }
+    }
+    if (!moveEnable){
+      immovablePieces[key] = move;
+      move.disableMovement();
+    } else {
+      movablePieces[key] = move;
+      move.enableMovement()
+    }
+  }
 
   // define when enemy movement -- buggy due to ignore mutliple setStopMove 
   // TODO: need to figure out why its apply multiple setStopmove
@@ -84,6 +101,20 @@ let runGameLoopUpdate = function(pieces) {
     }
   }
   hero.blinkEffect(30);
+
+  //define what would stop movements
+  hero.setStopMove(hero.touchedOn({ ...wallPieces, ...immovablePieces }));
+  for (let key in movablePieces) {
+    let move = movablePieces[key];
+    move.setStopMove(move.touchedOn({ ...wallPieces, ...immovablePieces }));
+    move.updateStopMove(hero.getStopMove(),true);
+    hero.updateStopMove(move.getStopMove(), true);
+    for (let skey in movablePieces) {
+      let move2 = movablePieces[skey];
+      move2.updateStopMove(move.getStopMove(), true);
+    }
+  }
+ 
   
 // update sword swing
   if (swordPiece) {
@@ -109,6 +140,8 @@ let loop = GameLoop({  // create the main game loop
   },
   render: function () { // render the game state
     pieces.renderAll();
+    makeStats(hero);
+    gameState.updateTimer();
   }
 });
 
