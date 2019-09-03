@@ -1,3 +1,8 @@
+//util functions
+function anyDirTrue(c) {
+    return Object.keys(c).map(function (key) { return c[key] }).some((x) => { return x })
+}
+
 class Game {
     constructor () {
         this.start = false;
@@ -161,6 +166,7 @@ class Gamepiece {
                 }
             };
         };
+        
         return gpsTouchedOn;
     };
 
@@ -198,14 +204,15 @@ class Hero extends Gamepiece {
         this.itemCount = 0;
         this.invulnerable = false;
         this.invulnerableCounter = 0.0;
-
-        this.sprite.dLeft = -10;
-        this.sprite.dRight = 10;
-        this.sprite.dUp = -10;
-        this.sprite.dDown = 10;
+        this.sprite.dLeft = -5;
+        this.sprite.dRight = 5;
+        this.sprite.dUp = -5;
+        this.sprite.dDown = 5;
         this.sprite.moveAbility = false;
         this.sprite.hasMovePiece = false;
         this.sprite.update = this.spriteUpdate;
+        this.sprite.direction = 'up'; // new for direction melee
+        this.sprite.attack = false; // new for melee attack
     }
 
     spriteUpdate() {
@@ -213,25 +220,38 @@ class Hero extends Gamepiece {
         if (keyPressed('left') && !this.stopMove.left) {
             if (this.x > 0) {
                 this.x += this.dLeft;
+                this.direction = 'left';
+                emit('melee', pieces);
             }
         }
         if (keyPressed('right') && !this.stopMove.right) {
             if ((this.x < canvas.width - this.width)) {
                 this.x += this.dRight;
+                this.direction = 'right';
+                emit('melee', pieces);
             }
         }
         if (keyPressed('up') && !this.stopMove.up) {
             if (this.y > 0) {
                 this.y += this.dUp;
+                this.direction = 'up';
+                emit('melee', pieces);
             }
         }
         if (keyPressed('down') && !this.stopMove.down) {
             if ((this.y < canvas.height - this.height)) {
                 this.y += this.dDown;
+                this.direction = 'down';
+                emit('melee', pieces);
             }
         }
         if (keyPressed('z')) {
             this.moveAbility = true;
+        }
+        // Create hero killing space / sword slash range
+        if (keyPressed('a') || keyPressed('space')) {
+            this.attack = !this.attack;
+            emit('melee', pieces);
         }
     }
 
@@ -339,9 +359,104 @@ class FastGP extends Gamepiece {
     }
 }
 
-//util functions
-function anyDirTrue(c) {
-    return Object.keys(c).map(function (key) { return c[key] }).some((x) => { return x })
+class Sword extends Gamepiece {
+    constructor(spriteKey, type, x, y, height = 20, width = 10, sprite = Sprite({})) {
+        super(spriteKey, type, sprite);
+        this.sprite.x = x;
+        this.sprite.y = y;
+        this.sprite.width = width;
+        this.sprite.height = height;
+        this.sprite.color = 'white';
+        this.renderTime = 0.5;
+        this.sLength = height;
+        this.sWidth = width;
+    }
+
+    updatePosition({x, y, width, height, direction}) { // moves the sword towards direction hero is facing
+        switch(direction) {
+            case 'up':
+                this.sprite.x = x;
+                this.sprite.y = y - height;
+                this.sprite.width = this.sWidth;
+                this.sprite.height = this.sLength;
+                break;
+            case 'down':
+                this.sprite.x = x;
+                this.sprite.y = y + height;
+                this.sprite.width = this.sWidth;
+                this.sprite.height = this.sLength;
+                break;
+            case 'right':
+                this.sprite.x = x + width;
+                this.sprite.y = y ;
+                this.sprite.width = this.sLength;
+                this.sprite.height = this.sWidth;
+                break;
+            case 'left':
+                this.sprite.x = x - width;
+                this.sprite.y = y ;
+                this.sprite.width = this.sLength;
+                this.sprite.height = this.sWidth;
+                break;
+            default:
+                break;
+        }
+    }
 }
 
+class Enemy extends Gamepiece {
+    constructor(spriteKey, type, x, y, width, height, color, moveType, range = 100, delta = 1, sprite = Sprite({})) {
+        super(spriteKey, type, sprite);
+        this.sprite.x = x;
+        this.sprite.y = y;
+        this.sprite.width = width;
+        this.sprite.height = height;
+        this.sprite.color = color;
+        this.sprite.movement = moveType;
+        this.sprite.positiveDirection = true;
+        this.sprite.delta = delta;
+        this.sprite.minHor = x - range;
+        this.sprite.maxHor = x + range;
+        this.sprite.minVer = y - range;
+        this.sprite.maxVer = y + range;
+        this.sprite.update = this.updateMovementTo(moveType);
+    }
 
+    updateMovementTo(type) {
+        switch(type) {
+            case 'horizontal': {
+                return this.horizontalMovement;
+            }
+            case 'vertical': {
+                return this.verticalMovement;
+            }
+        }
+    }
+
+    horizontalMovement() { // moves back and forth based on vertical or horizontal or stands still
+        if (this.x >= this.maxHor || this.x <= this.minHor || 
+            (this.stopMove.left ||  this.stopMove.right)) {
+            this.positiveDirection = !this.positiveDirection;
+        }
+        if (this.positiveDirection) {
+            this.x += this.delta;
+        }
+        if (!this.positiveDirection) {
+            this.x -= this.delta;
+        }
+    }
+
+    verticalMovement() { // moves back and forth based on vertical or horizontal or stands still
+        if (this.y >= this.maxVer || this.y <= this.minVer || 
+            (this.stopMove.down ||  this.stopMove.up)
+            ) {
+            this.positiveDirection = !this.positiveDirection;
+        }
+        if (this.positiveDirection) {
+            this.y += this.delta;
+        }
+        if (!this.positiveDirection) {
+            this.y -= this.delta;
+        }
+    }
+}

@@ -1,3 +1,4 @@
+
 //define canvas area
 canvas.width = 600;
 canvas.height = 600;
@@ -15,6 +16,25 @@ let hero = new Hero('hero', Sprite({
 hero.addToPieces(pieces)
 hero.health = 10;
 
+
+
+// Event Call backs 
+function moveSword(p) {
+  let { hero, sword } = p.pieces;
+  if(sword == undefined && hero.sprite.attack) {
+    sword = new Sword('sword', 'item',hero.sprite.x + hero.sprite.width, hero.sprite.y);
+    sword.addToPieces(pieces)
+  } else if(sword && sword.renderMe && sword.renderTime > 0) { // keep render
+    sword.updatePosition(hero.sprite)
+  } else if (sword && sword.renderMe && sword.renderTime <= 0) { // switch off
+    sword.kill();
+  }  
+};
+
+// register action event -- used in hero class for melee
+on('melee', moveSword);
+
+
 //Levels (will be controlled by state)
 sandboxLevel(pieces)
 
@@ -28,6 +48,7 @@ let runGameLoopUpdate = function(pieces) {
   let movePieces = pieces.getByType('move');
   let immovablePieces = {};
   let movablePieces = {}
+  let swordPiece = itemPieces['sword'];
 
   for (let key in movePieces) {
     let move = movePieces[key];
@@ -46,6 +67,16 @@ let runGameLoopUpdate = function(pieces) {
     }
   }
 
+  // define when enemy movement -- buggy due to ignore mutliple setStopMove 
+  // TODO: need to figure out why its apply multiple setStopmove
+
+  Object.values(enemyPieces).forEach(e => {
+    e.setStopMove(e.touchedOn(itemPieces)) // ignores first couple lines 
+    e.setStopMove(e.touchedOn(wallPieces)) // only apply the last touched item setSTopmove here
+    // e.setStopMove(e.touchedOn(enemyPieces))
+   
+  })
+
   //pickup item interaction
   for (let key in itemPieces) {
     let item = itemPieces[key]
@@ -58,9 +89,15 @@ let runGameLoopUpdate = function(pieces) {
   //enemy interaction
   for (let key in enemyPieces) {
     let enemy = enemyPieces[key]
-    if (hero.sprite.collidesWith(enemy.sprite) && !hero.invulnerable) {
+    if (hero.sprite.collidesWith(enemy.sprite) && !hero.invulnerable) { // hero interact with enemy
       hero.health -= 1;
       hero.invulnerable = true;
+    }
+  
+    if (swordPiece) { // sword interaction with enemy
+      if(swordPiece.sprite.collidesWith(enemy.sprite)) {
+        enemy.kill();
+      }
     }
   }
   hero.blinkEffect(30);
@@ -78,9 +115,22 @@ let runGameLoopUpdate = function(pieces) {
     }
   }
  
+  
+// update sword swing
+  if (swordPiece) {
+    if (swordPiece.renderTime >= 0) {
+      swordPiece.renderTime = swordPiece.renderTime - 1.0/60;
+    } else {
+      swordPiece.kill();
+      hero.sprite.attack = false;
+      swordPiece.renderTime = 0.5;
+    }
+  }
   // update everything else by sprite.update function
   pieces.updateAll();
   pieces.purgePieces();
+  
+  // console.log(hero.getStats(['health','itemCount']));
 
 }
 

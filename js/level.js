@@ -1,3 +1,5 @@
+
+
 //Make boundaries
 let writeStat = function (ctx, x,y,label,value) {
     ctx.fillText(label, x, y);
@@ -52,5 +54,8 @@ let sandboxLevel = function (pieces) {
     new Move('i_purple',  200, 300, 20, 20, 'purple').addToPieces(pieces);
     new Move('i_blue',  200, 200, 20, 20, 'blue').addToPieces(pieces);
 
+    // Enemies
+    var a = new Enemy('e_red', 'enemy', 150, 200, 20, 20, 'red', 'horizontal').addToPieces(pieces);
+    var b = new Enemy('e_purple', 'enemy', 250, 200, 20, 20, 'purple', 'vertical', 200, 5).addToPieces(pieces);
 
 }
