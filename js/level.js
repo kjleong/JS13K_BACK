@@ -42,7 +42,7 @@ let makeBasicWalls = function(pieces) {
 }
 
 let sandboxLevel = function (pieces) {
-    let hero = pieces.getPiece('hero');
+
     makeBasicWalls(pieces);
 
     //test items
@@ -57,5 +57,26 @@ let sandboxLevel = function (pieces) {
     // Enemies
     var a = new Enemy('e_red', 'enemy', 150, 200, 20, 20, 'red', 'horizontal').addToPieces(pieces);
     var b = new Enemy('e_purple', 'enemy', 250, 200, 20, 20, 'purple', 'vertical', 200, 5).addToPieces(pieces);
+
+}
+
+let testLevel1 = function (pieces) {
+
+    let wallThickness = 10;
+    let wallColor = 'white';
+    makeBasicWalls(pieces);
+
+    let hero = pieces.getPiece('hero');
+    hero.sprite.x = 550;
+    hero.sprite.y = 120;
+
+    new FastGP('w7', 'wall', 200, 200, wallThickness, 500, wallColor).addToPieces(pieces);
+    new FastGP('w8', 'wall', 300, 100, wallThickness, 400, wallColor).addToPieces(pieces);
+    new FastGP('w9', 'wall', 400, 200, wallThickness, 400, wallColor).addToPieces(pieces);
+    new FastGP('w10', 'wall', 500, 100, wallThickness, 400, wallColor).addToPieces(pieces);
+
+    var a = new Enemy('e1', 'enemy', 150, 200, 20, 20, 'red', 'horizontal').addToPieces(pieces);
+
+
 
 }
