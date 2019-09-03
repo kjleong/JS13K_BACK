@@ -17,36 +17,22 @@ hero.addToPieces(pieces)
 hero.health = 10;
 
 
-
-// Event Call backs
+// Event Call backs 
 function moveSword(p) {
   let { hero, sword } = p.pieces;
-  if(sword == undefined) {
+  if(sword == undefined && hero.sprite.attack) {
     sword = new Sword('sword', 'item',hero.sprite.x + hero.sprite.width, hero.sprite.y);
     sword.addToPieces(pieces)
-
   } else if(sword && sword.renderMe && sword.renderTime > 0) { // keep render
-
-    // sword.sprite.x = hero.sprite.y + hero.sprite.height;
     sword.updatePosition(hero.sprite)
-  
-  } else if (sword && sword.renderMe && sword.renderTime >= 0) { // switch off
-    // sword.kill();
-    
-    
-  // } else if (sword && sword.renderMe && hero.sprite.direction == 'up') {
-  //   console.log('up')
-  //   sword.sprite.x = hero.sprite.x + hero.sprite.width;
-  }
-  // else {
-    
-  //   console.log('show sword', sword.renderTime)
-  // }
-  
+  } else if (sword && sword.renderMe && sword.renderTime <= 0) { // switch off
+    sword.kill();
+  }  
 };
 
-on('swing',moveSword);
-// console.log(on, emit)
+// register action event -- used in hero class for melee
+on('melee',moveSword);
+
 
 
 //Levels (will be controlled by state)
@@ -86,10 +72,15 @@ let runGameLoopUpdate = function(pieces) {
   //enemy interaction
   for (let key in enemyPieces) {
     let enemy = enemyPieces[key]
-    if (hero.sprite.collidesWith(enemy.sprite) && !hero.invulnerable) {
+    if (hero.sprite.collidesWith(enemy.sprite) && !hero.invulnerable) { // hero interact with enemy
       hero.health -= 1;
       hero.invulnerable = true;
-      enemy.kill();
+    }
+  
+    if (swordPiece) { // sword interaction with enemy
+      if(swordPiece.sprite.collidesWith(enemy.sprite)) {
+        enemy.kill();
+      }
     }
   }
   hero.blinkEffect(30);
@@ -99,8 +90,9 @@ let runGameLoopUpdate = function(pieces) {
     if (swordPiece.renderTime >= 0) {
       swordPiece.renderTime = swordPiece.renderTime - 1.0/60;
     } else {
-      // swordPiece.kill();
-      swordPiece.renderTime = 2.0;
+      swordPiece.kill();
+      hero.sprite.attack = false;
+      swordPiece.renderTime = 0.5;
     }
   }
   // update everything else by sprite.update function
