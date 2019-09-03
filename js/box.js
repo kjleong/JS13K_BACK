@@ -239,24 +239,16 @@ class FastGP extends Gamepiece {
 }
 
 class Sword extends Gamepiece {
-    constructor(spriteKey, type, x, y, sprite = Sprite({})) {
+    constructor(spriteKey, type, x, y, height = 20, width = 10, sprite = Sprite({})) {
         super(spriteKey, type, sprite);
         this.sprite.x = x;
         this.sprite.y = y;
-        this.sprite.width = 20;
-        this.sprite.height = 20;
+        this.sprite.width = width;
+        this.sprite.height = height;
         this.sprite.color = 'white';
         this.renderTime = 0.5;
-    }
-
-    updateSword(){ // sword "animation time"
-        if(this.renderMe && this.renderTime <= 0) {
-            this.renderMe = false;
-            this.renderTime = 0.5;
-        }
-        if(this.renderMe && this.renderTime > 0) {
-            this.renderTime = this.renderTime - 1/60;
-        }
+        this.sLength = height;
+        this.sWidth = width;
     }
 
     updatePosition({x, y, width, height, direction}) { // moves the sword towards direction hero is facing
@@ -264,18 +256,26 @@ class Sword extends Gamepiece {
             case 'up':
                 this.sprite.x = x;
                 this.sprite.y = y - height;
+                this.sprite.width = this.sWidth;
+                this.sprite.height = this.sLength;
                 break;
             case 'down':
                 this.sprite.x = x;
                 this.sprite.y = y + height;
+                this.sprite.width = this.sWidth;
+                this.sprite.height = this.sLength;
                 break;
             case 'right':
                 this.sprite.x = x + width;
                 this.sprite.y = y ;
+                this.sprite.width = this.sLength;
+                this.sprite.height = this.sWidth;
                 break;
             case 'left':
                 this.sprite.x = x - width;
                 this.sprite.y = y ;
+                this.sprite.width = this.sLength;
+                this.sprite.height = this.sWidth;
                 break;
             default:
                 break;

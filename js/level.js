@@ -1,3 +1,5 @@
+
+
 //Make boundaries
 let makeBasicWalls = function(pieces) {
     let wallThickness = 10;

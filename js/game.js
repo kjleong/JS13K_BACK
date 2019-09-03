@@ -17,6 +17,7 @@ hero.addToPieces(pieces)
 hero.health = 10;
 
 
+
 // Event Call backs 
 function moveSword(p) {
   let { hero, sword } = p.pieces;
@@ -31,8 +32,7 @@ function moveSword(p) {
 };
 
 // register action event -- used in hero class for melee
-on('melee',moveSword);
-
+on('melee', moveSword);
 
 
 //Levels (will be controlled by state)
@@ -85,7 +85,7 @@ let runGameLoopUpdate = function(pieces) {
   }
   hero.blinkEffect(30);
   
-// update sword swing -- paused to test movement
+// update sword swing
   if (swordPiece) {
     if (swordPiece.renderTime >= 0) {
       swordPiece.renderTime = swordPiece.renderTime - 1.0/60;
