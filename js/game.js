@@ -71,20 +71,19 @@ let runGameLoopUpdate = function(pieces) {
   // TODO: need to figure out why its apply multiple setStopmove
 
   Object.values(enemyPieces).forEach(e => {
-    e.setStopMove(e.touchedOn(itemPieces)) // ignores first couple lines 
-    e.setStopMove(e.touchedOn(wallPieces)) // only apply the last touched item setSTopmove here
-    // e.setStopMove(e.touchedOn(enemyPieces))
-   
+    e.updateStopMove(e.touchedOn(itemPieces),true) // ignores first couple lines 
+    e.updateStopMove(e.touchedOn(wallPieces),true) // only apply the last touched item setSTopmove here
+    e.updateStopMove(e.touchedOn(movePieces), true) // only apply the last touched item setSTopmove here
+    e.updateStopMove(e.touchedOn(enemyPieces),true)
   })
 
   //pickup item interaction
-  for (let key in itemPieces) {
-    let item = itemPieces[key]
+  Object.values(itemPieces).forEach(item =>{
     if (hero.sprite.collidesWith(item.sprite)) {
       hero.itemCount += 1;
       item.kill();
     }
-  }
+  });
 
   //enemy interaction
   for (let key in enemyPieces) {
@@ -107,6 +106,7 @@ let runGameLoopUpdate = function(pieces) {
   for (let key in movablePieces) {
     let move = movablePieces[key];
     move.setStopMove(move.touchedOn({ ...wallPieces, ...immovablePieces }));
+    //move.updateStopMove(move.touchedOn(enemyPieces), true);
     move.updateStopMove(hero.getStopMove(),true);
     hero.updateStopMove(move.getStopMove(), true);
     for (let skey in movablePieces) {

@@ -249,7 +249,7 @@ class Hero extends Gamepiece {
             this.moveAbility = true;
         }
         // Create hero killing space / sword slash range
-        if (keyPressed('a') || keyPressed('space')) {
+        if (keyPressed('a')) {
             this.attack = !this.attack;
             emit('melee', pieces);
         }
@@ -332,7 +332,7 @@ class Move extends Gamepiece {
 
     enableMovement() {
         this.sprite.enableMove = true;
-        this.setSpeed(10);
+        this.setSpeed(5);
     }
 
     disableMovement(){
