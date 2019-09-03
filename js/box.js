@@ -61,6 +61,7 @@ class Allpieces {
     updateAll() {
         for (let key in this.pieces) {
             this.pieces[key].sprite.update();
+            this.pieces[key].resetStopMove();
         }
     }
 
@@ -135,6 +136,15 @@ class Gamepiece {
         };
     }
 
+    resetStopMove() {
+        this.sprite.stopMove = {
+            left: false,
+            right: false,
+            down: false,
+            up: false,
+        };
+    }
+
     touchedOn (gpArray) {
         let gpsTouchedOn = {
             right: false,
@@ -156,13 +166,21 @@ class Gamepiece {
 
     setStopMove(stopObj){
         for (let key in stopObj) {
-            this.sprite.stopMove[key] = stopObj[key]
+            this.sprite.stopMove[key] = stopObj[key];
         }
     }
 
     getStopMove() {
         return this.sprite.stopMove;
     }
+
+    updateStopMove(stopObj,stopStatus){
+        for (let key in stopObj) {
+            if (stopObj[key] === stopStatus) {
+                this.sprite.stopMove[key] = stopObj[key];
+            }
+        }
+    } 
 
     kill() {
         this.destroyMe = true;
@@ -186,6 +204,7 @@ class Hero extends Gamepiece {
         this.sprite.dUp = -10;
         this.sprite.dDown = 10;
         this.sprite.moveAbility = false;
+        this.sprite.hasMovePiece = false;
         this.sprite.update = this.spriteUpdate;
     }
 

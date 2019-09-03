@@ -66,24 +66,21 @@ let runGameLoopUpdate = function(pieces) {
   hero.blinkEffect(30);
 
   //define what would stop movements
+  hero.setStopMove(hero.touchedOn({ ...wallPieces, ...immovablePieces }));
   for (let key in movablePieces) {
     let move = movablePieces[key];
-    move.setStopMove(move.touchedOn({...wallPieces, ...immovablePieces }));
-    if (anyDirTrue(move.getStopMove())){
-      immovablePieces[move.spriteKey] = move;
-    }
     move.setStopMove(move.touchedOn({ ...wallPieces, ...immovablePieces }));
+    move.updateStopMove(hero.getStopMove(),true);
+    hero.updateStopMove(move.getStopMove(), true);
+    for (let skey in movablePieces) {
+      let move2 = movablePieces[skey];
+      move2.updateStopMove(move.getStopMove(), true);
+    }
   }
-  hero.setStopMove(hero.touchedOn({ ...wallPieces, ...immovablePieces }));
-
+ 
   // update everything else by sprite.update function
   pieces.updateAll();
   pieces.purgePieces();
-
-  
-  
-  console.log(hero.getStats(['health','itemCount']));
-  console.log(hero.getMoveAbilityStatus());
 
 }
 
