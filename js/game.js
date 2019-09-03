@@ -79,6 +79,8 @@ let runGameLoopUpdate = function(pieces) {
   // update everything else by sprite.update function
   pieces.updateAll();
   pieces.purgePieces();
+
+  
   
   console.log(hero.getStats(['health','itemCount']));
   console.log(hero.getMoveAbilityStatus());
@@ -91,6 +93,8 @@ let loop = GameLoop({  // create the main game loop
   },
   render: function () { // render the game state
     pieces.renderAll();
+    makeStats(hero);
+    gameState.updateTimer();
   }
 });
 

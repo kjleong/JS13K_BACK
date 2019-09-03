@@ -1,3 +1,25 @@
+class Game {
+    constructor () {
+        this.start = false;
+        this.floor = 12;
+        this.win = false;
+        this.enemiesKilled = 0;
+        this.timer = 0.0;
+    }
+
+    updateTimer() {
+        this.timer += 1.0/(60*60);
+    }
+
+    getTimeMin() {
+        return ('0' +Math.floor(this.timer)).slice(-2);
+    }
+
+    getTimeSec(){
+        return ('0'+Math.floor(this.timer*60) % 60).slice(-2);
+    }
+}
+
 class Allpieces {
     constructor () {
         this.pieces = {};
