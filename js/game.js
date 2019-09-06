@@ -16,8 +16,6 @@ let hero = new Hero('hero', Sprite({
 hero.addToPieces(pieces)
 hero.health = 10;
 
-
-
 // Event Call backs 
 function moveSword(p) {
   let { hero, sword } = p.pieces;
@@ -34,12 +32,10 @@ function moveSword(p) {
 // register action event -- used in hero class for melee
 on('melee', moveSword);
 
-
-//Levels (will be controlled by state)
-//sandboxLevel(pieces)
-testLevel1(pieces);
-
 let runGameLoopUpdate = function(pieces) {
+
+  startLevels(gameState,pieces);
+
   // Going to define hero's update and dependencies here
   // extracting pieces by type
   let hero = pieces.getPiece('hero');
@@ -47,6 +43,7 @@ let runGameLoopUpdate = function(pieces) {
   let itemPieces = pieces.getByType('item');
   let enemyPieces = pieces.getByType('enemy');
   let movePieces = pieces.getByType('move');
+  let stairPieces = pieces.getByType('stairs');
   let immovablePieces = {};
   let movablePieces = {}
   let swordPiece = itemPieces['sword'];
@@ -103,10 +100,10 @@ let runGameLoopUpdate = function(pieces) {
   hero.blinkEffect(30);
 
   //define what would stop movements
-  hero.setStopMove(hero.touchedOn({ ...wallPieces, ...immovablePieces }));
+  hero.setStopMove(hero.touchedOn({ ...wallPieces, ...immovablePieces, ...stairPieces}));
   for (let key in movablePieces) {
     let move = movablePieces[key];
-    move.setStopMove(move.touchedOn({ ...wallPieces, ...immovablePieces }));
+    move.setStopMove(move.touchedOn({ ...wallPieces, ...immovablePieces, ...stairPieces}));
     //move.updateStopMove(move.touchedOn(enemyPieces), true);
     move.updateStopMove(hero.getStopMove(),true);
     hero.updateStopMove(move.getStopMove(), true);
@@ -117,7 +114,7 @@ let runGameLoopUpdate = function(pieces) {
   }
  
   
-// update sword swing
+  // update sword swing
   if (swordPiece) {
     if (swordPiece.renderTime >= 0) {
       swordPiece.renderTime = swordPiece.renderTime - 1.0/60;
@@ -127,12 +124,19 @@ let runGameLoopUpdate = function(pieces) {
       swordPiece.renderTime = 0.5;
     }
   }
+
+  //check stairs
+  if (anyDirTrue(hero.touchedOn(stairPieces))) {
+    gameState.floor -= 1;
+    gameState.floorStarted = false;
+    pieces.clearPieces();
+    console.log(gameState);
+  }
+  
   // update everything else by sprite.update function
   pieces.updateAll();
   pieces.purgePieces();
   
-  // console.log(hero.getStats(['health','itemCount']));
-
 }
 
 let loop = GameLoop({  // create the main game loop
