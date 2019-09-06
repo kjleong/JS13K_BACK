@@ -1,9 +1,9 @@
 body {
-background-color: black;
+  background-color: black;
 }
 
 canvas {
-  border: 5px solid blue;
+  border: 5px solid white;
   width: 100%;
   max-width: 600px;
   height: 600px;

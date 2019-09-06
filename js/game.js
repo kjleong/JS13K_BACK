@@ -1,9 +1,4 @@
 
-//define canvas area
-canvas.width = 600;
-canvas.height = 600;
-canvas.parentElement.style.textAlign = "center";
-
 //initializing all pieces to hold pieces
 let pieces = new Allpieces();
 let hero = new Hero('hero', Sprite({
@@ -36,12 +31,11 @@ function moveSword(p) {
 // register action event -- used in hero class for melee
 on('melee', moveSword);
 
+let runGameLoopUpdate = function(gameState,pieces) {
 
-//Levels (will be controlled by state)
-//sandboxLevel(pieces)
-testLevel1(pieces);
+  startLevels(gameState,pieces);
+  
 
-let runGameLoopUpdate = function(pieces) {
   // Going to define hero's update and dependencies here
   // extracting pieces by type
   let hero = pieces.getPiece('hero');
@@ -49,6 +43,7 @@ let runGameLoopUpdate = function(pieces) {
   let itemPieces = pieces.getByType('item');
   let enemyPieces = pieces.getByType('enemy');
   let movePieces = pieces.getByType('move');
+  let stairPieces = pieces.getByType('stairs');
   let immovablePieces = {};
   let movablePieces = {}
   let swordPiece = itemPieces['sword'];
@@ -78,6 +73,7 @@ let runGameLoopUpdate = function(pieces) {
     e.updateStopMove(e.touchedOn(wallPieces),true) // only apply the last touched item setSTopmove here
     e.updateStopMove(e.touchedOn(movePieces), true) // only apply the last touched item setSTopmove here
     e.updateStopMove(e.touchedOn(enemyPieces),true)
+    e.updateStopMove(e.touchedOn(stairPieces), true)
   })
 
   //pickup item interaction
@@ -90,6 +86,9 @@ let runGameLoopUpdate = function(pieces) {
       console.log(item.sprite.itemType)
       hero.itemCount += 1;
       item.kill();
+      if (item.itemType=='heart'){
+        hero.health += 1;
+      }
     }
   });
 
@@ -104,27 +103,36 @@ let runGameLoopUpdate = function(pieces) {
     if (swordPiece) { // sword interaction with enemy
       if(swordPiece.sprite.collidesWith(enemy.sprite)) {
         enemy.kill();
+        gameState.enemiesKilled += 1;
       }
     }
   }
   hero.blinkEffect(30);
 
   //define what would stop movements
-  hero.setStopMove(hero.touchedOn({ ...wallPieces, ...immovablePieces }));
+  hero.setStopMove(hero.touchedOn({ ...wallPieces, ...immovablePieces, ...stairPieces, }));
   for (let key in movablePieces) {
     let move = movablePieces[key];
-    move.setStopMove(move.touchedOn({ ...wallPieces, ...immovablePieces }));
-    //move.updateStopMove(move.touchedOn(enemyPieces), true);
+    move.setStopMove(move.touchedOn({ ...wallPieces, ...immovablePieces, ...stairPieces, ...enemyPieces}));
     move.updateStopMove(hero.getStopMove(),true);
     hero.updateStopMove(move.getStopMove(), true);
     for (let skey in movablePieces) {
       let move2 = movablePieces[skey];
       move2.updateStopMove(move.getStopMove(), true);
+      move2.updateStopMove(move2.touchedOn(enemyPieces), true);
+      hero.updateStopMove(move2.getStopMove(), true);
     }
+    hero.updateStopMove(move.getStopMove(), true);
   }
- 
+
+  //TODO: sav for later
+  // Object.values(enemyPieces).forEach(e => {
+  //   if (Object.values(movePieces).some((x) => e.sprite.collidesWith(x.sprite))) {
+  //     e.sprite.positiveDirection = !e.sprite.positiveDirection;
+  //   }
+  // });
   
-// update sword swing
+  // update sword swing
   if (swordPiece) {
     if (swordPiece.renderTime >= 0) {
       swordPiece.renderTime = swordPiece.renderTime - 1.0/60;
@@ -134,24 +142,61 @@ let runGameLoopUpdate = function(pieces) {
       swordPiece.renderTime = 0.5;
     }
   }
+
+  //check stairs
+  if (anyDirTrue(hero.touchedOn(stairPieces)) || Object.values(stairPieces).some((x) => hero.sprite.collidesWith(x.sprite))) {
+    gameState.floor -= 1;
+    gameState.floorStarted = false;
+    pieces.clearPieces();
+    console.log(gameState);
+  }
+  
   // update everything else by sprite.update function
   pieces.updateAll();
   pieces.purgePieces();
   
-  // console.log(hero.getStats(['health','itemCount']));
-
 }
 
 let loop = GameLoop({  // create the main game loop
   update: function() { // update the game state
-    runGameLoopUpdate(pieces);
+    switch(gameState.state) {
+      case 'menu':
+        break;
+      case 'game':
+        runGameLoopUpdate(gameState,pieces);
+        break
+      case 'end':
+        //endGameScreen
+        break;
+      case 'credits':
+        //credits
+        break;
+      default:
+        showMenu(gameState);
+    }
   },
   render: function () { // render the game state
-    pieces.renderAll();
-    makeStats(hero);
-    gameState.updateTimer();
+    switch (gameState.state) {
+      case 'menu':
+        showMenu(gameState);
+        break;
+      case 'game':
+        pieces.renderAll();
+        makeStats(hero);
+        gameState.updateTimer();
+        break;
+      case 'end':
+        //endGameScreen
+        break;
+      case 'credits':
+        //credits
+        break;
+      default:
+        showMenu(gameState);
+    }
   }
 });
+loop.start();
 
 
 

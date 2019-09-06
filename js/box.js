@@ -7,9 +7,12 @@ class Game {
     constructor () {
         this.start = false;
         this.floor = 12;
+        this.floorStarted = false;
         this.win = false;
+        this.state = 'menu';
         this.enemiesKilled = 0;
         this.timer = 0.0;
+        this.loaded = false;
     }
 
     updateTimer() {
@@ -92,6 +95,14 @@ class Allpieces {
     purgePieces() {
         for (let key in this.pieces) {
             if (this.pieces[key].destroyMe) {
+                delete this.pieces[key];
+            }
+        }
+    }
+
+    clearPieces() {
+        for (let key in this.pieces) {
+            if (key !== 'hero') {
                 delete this.pieces[key];
             }
         }
@@ -369,6 +380,64 @@ class FastGP extends Gamepiece {
     }
 }
 
+class Heart extends Gamepiece {
+    constructor(spriteKey, x, y, sprite = Sprite({})) {
+        super(spriteKey, 'item', sprite);
+        this.itemType = 'heart';
+        this.sprite.x = x;
+        this.sprite.y = y;
+        this.sprite.width = 20;
+        this.sprite.height = 20;
+        let image = new Image();
+        image.src = 'assets/imgs/Heart.png';
+        this.sprite.image = image;
+    }
+}
+
+class Tower extends Gamepiece {
+    constructor(spriteKey, type, x, y, sprite = Sprite({})) {
+        super(spriteKey, type, sprite);
+        this.sprite.x = x;
+        this.sprite.y = y;
+        this.sprite.width = 60;
+        this.sprite.height = 60;
+        let image = new Image();
+        image.src = 'assets/imgs/TowerWall.png';
+        this.sprite.image = image;
+    }
+}
+
+class Wall extends Gamepiece {
+    constructor(spriteKey, direction, x, y,length,  sprite = Sprite({})) {
+        super(spriteKey, 'wall', sprite);
+        this.sprite.x = x;
+        this.sprite.y = y;
+        this.thickness = 10;
+        this.sprite.color = 'white';
+        if (direction === 'h') {
+            this.sprite.width = length;
+            this.sprite.height = this.thickness;
+        } else {
+            this.sprite.width = this.thickness;
+            this.sprite.height = length;
+        }
+    }
+}
+
+class Stairs extends Gamepiece {
+    constructor(spriteKey, x, y, sprite = Sprite({})) {
+        super(spriteKey, 'stairs', sprite);
+        let image = new Image();
+        image.src = 'assets/imgs/Stairs.png';
+        this.sprite.x = x;
+        this.sprite.y = y;
+        this.sprite.width = 30;
+        this.sprite.height = 30;
+        this.sprite.image = image;
+    }
+    
+}
+
 class Sword extends Gamepiece {
     constructor(spriteKey, type, x, y, height = 20, width = 10, sprite = Sprite({})) {
         super(spriteKey, type, sprite);
@@ -452,10 +521,10 @@ class Enemy extends Gamepiece {
             (this.stopMove.left ||  this.stopMove.right)) {
             this.positiveDirection = !this.positiveDirection;
         }
-        if (this.positiveDirection) {
+        if (this.positiveDirection && !this.stopMove.right) {
             this.x += this.delta;
         }
-        if (!this.positiveDirection) {
+        if (!this.positiveDirection && !this.stopMove.left) {
             this.x -= this.delta;
         }
     }
@@ -466,10 +535,10 @@ class Enemy extends Gamepiece {
             ) {
             this.positiveDirection = !this.positiveDirection;
         }
-        if (this.positiveDirection) {
+        if (this.positiveDirection && !this.stopMove.downt) {
             this.y += this.delta;
         }
-        if (!this.positiveDirection) {
+        if (!this.positiveDirection && !this.stopMove.up) {
             this.y -= this.delta;
         }
     }
