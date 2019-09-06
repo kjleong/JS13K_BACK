@@ -126,7 +126,7 @@ let runGameLoopUpdate = function(pieces) {
   }
 
   //check stairs
-  if (anyDirTrue(hero.touchedOn(stairPieces))) {
+  if (anyDirTrue(hero.touchedOn(stairPieces)) || Object.values(stairPieces).some((x) => hero.sprite.collidesWith(x.sprite))) {
     gameState.floor -= 1;
     gameState.floorStarted = false;
     pieces.clearPieces();

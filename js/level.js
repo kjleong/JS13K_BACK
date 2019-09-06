@@ -63,7 +63,10 @@ let initializeLevel = function (gameState, pieces) {
     //tower boundary
     new Wall('w6',  'v', 100, 100,  canvas.height - 100).addToPieces(pieces);
 
-    
+    for (let ii = 0; ii<7;ii++){
+        new Tower('tower' + ii, 'tower',25, 170 +60 * ii).addToPieces(pieces);
+    } 
+    new FastGP('marker', 'marker', 25 + 60 / 2 - 10, 150 + 420 / 12 * (12-gameState.floor), 20,20,'green').addToPieces(pieces);
 
     return pieces.getPiece('hero')
 }

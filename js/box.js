@@ -370,6 +370,19 @@ class FastGP extends Gamepiece {
     }
 }
 
+class Tower extends Gamepiece {
+    constructor(spriteKey, type, x, y, sprite = Sprite({})) {
+        super(spriteKey, type, sprite);
+        this.sprite.x = x;
+        this.sprite.y = y;
+        this.sprite.width = 60;
+        this.sprite.height = 60;
+        let image = new Image();
+        image.src = 'assets/imgs/TowerWall.png';
+        this.sprite.image = image;
+    }
+}
+
 class Wall extends Gamepiece {
     constructor(spriteKey, direction, x, y,length,  sprite = Sprite({})) {
         super(spriteKey, 'wall', sprite);
