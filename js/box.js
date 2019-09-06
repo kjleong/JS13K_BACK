@@ -493,10 +493,10 @@ class Enemy extends Gamepiece {
             (this.stopMove.left ||  this.stopMove.right)) {
             this.positiveDirection = !this.positiveDirection;
         }
-        if (this.positiveDirection) {
+        if (this.positiveDirection && !this.stopMove.right) {
             this.x += this.delta;
         }
-        if (!this.positiveDirection) {
+        if (!this.positiveDirection && !this.stopMove.left) {
             this.x -= this.delta;
         }
     }
@@ -507,10 +507,10 @@ class Enemy extends Gamepiece {
             ) {
             this.positiveDirection = !this.positiveDirection;
         }
-        if (this.positiveDirection) {
+        if (this.positiveDirection && !this.stopMove.downt) {
             this.y += this.delta;
         }
-        if (!this.positiveDirection) {
+        if (!this.positiveDirection && !this.stopMove.up) {
             this.y -= this.delta;
         }
     }

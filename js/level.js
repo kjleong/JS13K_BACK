@@ -31,8 +31,8 @@ let startLevels = function (gameState, pieces) {
     if (!gameState.floorStarted) {
 
         switch (gameState.floor) {
-            case 12: testlevel11(gameState, pieces); break;
-            case 11: testlevel12(gameState, pieces); break;
+            case 12: testlevel12(gameState, pieces); break;//testlevel12(gameState, pieces); break;
+            case 11: testlevel11(gameState, pieces); break;
             case 10: level10(gameState, pieces); break;
             case 9: level9(gameState, pieces); break;
             case 8: level8(gameState, pieces); break;
@@ -71,25 +71,39 @@ let initializeLevel = function (gameState, pieces) {
     return pieces.getPiece('hero')
 }
 
-//Levels
-let testlevel12 = function (gameState, pieces) {
+let sandboxLevel = function (gameState,pieces) {
 
     let hero = initializeLevel(gameState, pieces);
-    hero.sprite.x = 550;
-    hero.sprite.y = 120;
-
-    new Wall('w7', 'v', 200, 200,  500).addToPieces(pieces);
-    new Wall('w8', 'v', 300, 100,  400).addToPieces(pieces);
-    new Wall('w9', 'v', 400, 200,  400).addToPieces(pieces);
-    new Wall('w10', 'v', 500, 100, 400).addToPieces(pieces);
-
-    var a = new Enemy('e1', 'enemy', 150, 200, 20, 20, 'red', 'horizontal').addToPieces(pieces);
-
-    new Stairs('stair1', 140, 550).addToPieces(pieces);
-
+    hero.sprite.x = 120;
+    hero.sprite.y = 550;
 }
 
-let testlevel11 = function (gameState,pieces) {
+//Levels
+let testlevel12 = function (gameState,pieces) {
+
+    let hero = initializeLevel(gameState, pieces);
+    hero.sprite.x = 120;
+    hero.sprite.y = 550;
+
+    //test items
+    new FastGP('i_green', 'item', 300, 300, 20, 20, 'green').addToPieces(pieces);
+    new FastGP('i_orange', 'item', 400, 300, 20, 20, 'orange').addToPieces(pieces);
+
+    new FastGP('e_white', 'enemy', 500, 400, 20, 20, 'white').addToPieces(pieces);
+
+    new Move('i_purple', 200, 300, 20, 20, 'purple').addToPieces(pieces);
+    new Move('i_blue', 200, 200, 20, 20, 'blue').addToPieces(pieces);
+
+    // Enemies
+    var a = new Enemy('e_red', 'enemy', 150, 200, 20, 20, 'red', 'horizontal').addToPieces(pieces);
+    var b = new Enemy('e_purple', 'enemy', 250, 200, 20, 20, 'purple', 'vertical', 200, 5).addToPieces(pieces);
+
+    new Stairs('stair1', 300, 520).addToPieces(pieces);
+
+    
+}
+
+let testlevel11 = function (gameState, pieces) {
 
     let hero = initializeLevel(gameState, pieces);
     hero.sprite.x = 120;
@@ -99,6 +113,7 @@ let testlevel11 = function (gameState,pieces) {
     new Stairs('stair1', 550, 120).addToPieces(pieces);
 
 }
+
 let level10 = function (gameState,pieces) { 
     let hero = initializeLevel(gameState, pieces);
     hero.sprite.x = 120;
@@ -107,7 +122,22 @@ let level10 = function (gameState,pieces) {
     new Stairs('stair1', 300, 300).addToPieces(pieces);
 }
 
-let level9 = function (gameState,pieces) { }
+let level9 = function (gameState,pieces) { 
+
+    let hero = initializeLevel(gameState, pieces);
+    hero.sprite.x = 550;
+    hero.sprite.y = 120;
+
+    new Wall('w7', 'v', 200, 200, 500).addToPieces(pieces);
+    new Wall('w8', 'v', 300, 100, 400).addToPieces(pieces);
+    new Wall('w9', 'v', 400, 200, 400).addToPieces(pieces);
+    new Wall('w10', 'v', 500, 100, 400).addToPieces(pieces);
+
+    var a = new Enemy('e1', 'enemy', 150, 200, 20, 20, 'red', 'horizontal').addToPieces(pieces);
+
+    new Stairs('stair1', 140, 550).addToPieces(pieces);
+
+}
 
 let level8 = function (gameState,pieces) { }
 

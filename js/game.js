@@ -35,6 +35,7 @@ on('melee', moveSword);
 let runGameLoopUpdate = function(pieces) {
 
   startLevels(gameState,pieces);
+  
 
   // Going to define hero's update and dependencies here
   // extracting pieces by type
@@ -73,6 +74,7 @@ let runGameLoopUpdate = function(pieces) {
     e.updateStopMove(e.touchedOn(wallPieces),true) // only apply the last touched item setSTopmove here
     e.updateStopMove(e.touchedOn(movePieces), true) // only apply the last touched item setSTopmove here
     e.updateStopMove(e.touchedOn(enemyPieces),true)
+    e.updateStopMove(e.touchedOn(stairPieces), true)
   })
 
   //pickup item interaction
@@ -100,19 +102,27 @@ let runGameLoopUpdate = function(pieces) {
   hero.blinkEffect(30);
 
   //define what would stop movements
-  hero.setStopMove(hero.touchedOn({ ...wallPieces, ...immovablePieces, ...stairPieces}));
+  hero.setStopMove(hero.touchedOn({ ...wallPieces, ...immovablePieces, ...stairPieces, }));
   for (let key in movablePieces) {
     let move = movablePieces[key];
-    move.setStopMove(move.touchedOn({ ...wallPieces, ...immovablePieces, ...stairPieces}));
-    //move.updateStopMove(move.touchedOn(enemyPieces), true);
+    move.setStopMove(move.touchedOn({ ...wallPieces, ...immovablePieces, ...stairPieces, ...enemyPieces}));
     move.updateStopMove(hero.getStopMove(),true);
     hero.updateStopMove(move.getStopMove(), true);
     for (let skey in movablePieces) {
       let move2 = movablePieces[skey];
       move2.updateStopMove(move.getStopMove(), true);
+      move2.updateStopMove(move2.touchedOn(enemyPieces), true);
+      hero.updateStopMove(move2.getStopMove(), true);
     }
+    hero.updateStopMove(move.getStopMove(), true);
   }
- 
+
+  //TODO: sav for later
+  // Object.values(enemyPieces).forEach(e => {
+  //   if (Object.values(movePieces).some((x) => e.sprite.collidesWith(x.sprite))) {
+  //     e.sprite.positiveDirection = !e.sprite.positiveDirection;
+  //   }
+  // });
   
   // update sword swing
   if (swordPiece) {
