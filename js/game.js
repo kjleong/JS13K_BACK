@@ -9,7 +9,7 @@ let pieces = new Allpieces();
 let hero = new Hero('hero', Sprite({
   x: 500,        // starting x,y position of the sprite
   y: 500,
-  color: 'red',  // fill color of the sprite rectangle
+  color: 'green',  // fill color of the sprite rectangle
   width: 20,     // width and height of the sprite rectangle
   height: 20,
 }));
@@ -38,7 +38,8 @@ on('melee', moveSword);
 
 
 //Levels (will be controlled by state)
-sandboxLevel(pieces)
+//sandboxLevel(pieces)
+testLevel1(pieces);
 
 let runGameLoopUpdate = function(pieces) {
   // Going to define hero's update and dependencies here
