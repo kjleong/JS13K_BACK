@@ -92,6 +92,7 @@ let runGameLoopUpdate = function(gameState,pieces) {
     if (swordPiece) { // sword interaction with enemy
       if(swordPiece.sprite.collidesWith(enemy.sprite)) {
         enemy.kill();
+        gameState.enemiesKilled += 1;
       }
     }
   }
