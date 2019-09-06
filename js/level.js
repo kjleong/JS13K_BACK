@@ -98,6 +98,8 @@ let testlevel12 = function (gameState,pieces) {
     var a = new Enemy('e_red', 'enemy', 150, 200, 20, 20, 'red', 'horizontal').addToPieces(pieces);
     var b = new Enemy('e_purple', 'enemy', 250, 200, 20, 20, 'purple', 'vertical', 200, 5).addToPieces(pieces);
 
+    new Heart('h1', 400, 150).addToPieces(pieces);
+
     new Stairs('stair1', 300, 520).addToPieces(pieces);
 
     

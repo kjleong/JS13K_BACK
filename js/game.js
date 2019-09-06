@@ -78,6 +78,9 @@ let runGameLoopUpdate = function(gameState,pieces) {
     if (hero.sprite.collidesWith(item.sprite)) {
       hero.itemCount += 1;
       item.kill();
+      if (item.itemType=='heart'){
+        hero.health += 1;
+      }
     }
   });
 
