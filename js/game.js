@@ -16,13 +16,18 @@ let hero = new Hero('hero', Sprite({
 hero.addToPieces(pieces)
 hero.health = 10;
 
-
-
 // Event Call backs 
 function moveSword(p) {
   let { hero, sword } = p.pieces;
   if(sword == undefined && hero.sprite.attack) {
-    sword = new Sword('sword', 'item',hero.sprite.x + hero.sprite.width, hero.sprite.y);
+    let direction = {
+      'up': hero.sprite.y,
+      'right': hero.sprite.x ,
+      'left': hero.sprite.x,
+      'down': hero.sprite.y
+    }
+    sword = new Sword('sword', 'item', hero.sprite.x + hero.sprite.width, hero.sprite.y);
+    sword.updatePosition(hero.sprite);
     sword.addToPieces(pieces)
   } else if(sword && sword.renderMe && sword.renderTime > 0) { // keep render
     sword.updatePosition(hero.sprite)
