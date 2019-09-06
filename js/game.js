@@ -21,7 +21,6 @@ function moveSword(p) {
   } else if(sword && sword.renderMe && sword.renderTime > 0) { // keep render
     sword.updatePosition(hero.sprite)
     sword.updateHealth(hero.sprite.swordHealth);
-    console.log("sh",sword.health)
   } else if (sword && sword.renderMe && sword.renderTime <= 0) { // switch off
 
     sword.kill();
@@ -83,7 +82,6 @@ let runGameLoopUpdate = function(gameState,pieces) {
         hero.sprite.hasSword = true;
         hero.sprite.swordHealth = 10;
       }
-      console.log(item.sprite.itemType)
       hero.itemCount += 1;
       item.kill();
       if (item.itemType=='heart'){
@@ -139,6 +137,7 @@ let runGameLoopUpdate = function(gameState,pieces) {
     } else {
       swordPiece.kill();
       hero.sprite.attack = false;
+      hero.sprite.swordHealth -= 1; // sword vitality
       swordPiece.renderTime = 0.5;
     }
   }
