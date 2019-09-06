@@ -264,7 +264,6 @@ class Hero extends Gamepiece {
         }
         // Create hero killing space / sword slash range
         if (keyPressed('a') && this.hasSword){
-            console.log(this.swordHealth)
             if(this.swordHealth <= 1) {
                 this.hasSword = false;
             }
