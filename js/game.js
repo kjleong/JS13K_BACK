@@ -20,7 +20,8 @@ hero.health = 10;
 function moveSword(p) {
   let { hero, sword } = p.pieces;
   if(sword == undefined && hero.sprite.attack) {
-    sword = new Sword('sword', 'item',hero.sprite.x + hero.sprite.width, hero.sprite.y);
+    sword = new Sword('sword', 'item', hero.sprite.x + hero.sprite.width, hero.sprite.y);
+    sword.updatePosition(hero.sprite);
     sword.addToPieces(pieces)
   } else if(sword && sword.renderMe && sword.renderTime > 0) { // keep render
     sword.updatePosition(hero.sprite)
