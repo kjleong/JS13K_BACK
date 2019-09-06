@@ -25,7 +25,10 @@ function moveSword(p) {
     sword.addToPieces(pieces)
   } else if(sword && sword.renderMe && sword.renderTime > 0) { // keep render
     sword.updatePosition(hero.sprite)
+    sword.updateHealth(hero.sprite.swordHealth);
+    console.log("sh",sword.health)
   } else if (sword && sword.renderMe && sword.renderTime <= 0) { // switch off
+
     sword.kill();
   }  
 };
@@ -79,6 +82,11 @@ let runGameLoopUpdate = function(pieces) {
   //pickup item interaction
   Object.values(itemPieces).forEach(item =>{
     if (hero.sprite.collidesWith(item.sprite)) {
+      if(item.sprite.itemType == 'sword') {
+        hero.sprite.hasSword = true;
+        hero.sprite.swordHealth = 10;
+      }
+      console.log(item.sprite.itemType)
       hero.itemCount += 1;
       item.kill();
     }

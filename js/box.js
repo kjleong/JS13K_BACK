@@ -211,8 +211,10 @@ class Hero extends Gamepiece {
         this.sprite.moveAbility = false;
         this.sprite.hasMovePiece = false;
         this.sprite.update = this.spriteUpdate;
-        this.sprite.direction = 'up'; // new for direction melee
-        this.sprite.attack = false; // new for melee attack
+        this.sprite.direction = 'up';
+        this.sprite.attack = false;
+        this.sprite.hasSword = false;
+        this.sprite.swordHealth = 0;
     }
 
     spriteUpdate() {
@@ -243,14 +245,22 @@ class Hero extends Gamepiece {
                 this.y += this.dDown;
                 this.direction = 'down';
                 emit('melee', pieces);
+            
             }
         }
         if (keyPressed('z')) {
             this.moveAbility = true;
         }
         // Create hero killing space / sword slash range
-        if (keyPressed('a')) {
+        if (keyPressed('a') && this.hasSword){
+            console.log(this.swordHealth)
+            if(this.swordHealth <= 0) {
+                this.hasSword = false;
+            }
+            this.swordHealth -= 1;
+            
             this.attack = !this.attack;
+
             emit('melee', pieces);
         }
     }
@@ -372,6 +382,10 @@ class Sword extends Gamepiece {
         this.sWidth = width;
     }
 
+    updateHealth(h) {
+        this.health = h;
+    }
+
     updatePosition({x, y, width, height, direction}) { // moves the sword towards direction hero is facing
         switch(direction) {
             case 'up':
@@ -458,5 +472,17 @@ class Enemy extends Gamepiece {
         if (!this.positiveDirection) {
             this.y -= this.delta;
         }
+    }
+}
+
+class SwordItem extends FastGP {
+    constructor(spriteKey, x, y, sprite = Sprite({})) {
+        super(spriteKey, 'item', sprite);
+        this.sprite.itemType = 'sword'
+        this.sprite.x = x;
+        this.sprite.y = y;
+        this.sprite.width = 10;
+        this.sprite.height = 10;
+        this.sprite.color = 'white';
     }
 }

@@ -51,6 +51,7 @@ let sandboxLevel = function (pieces) {
 
     new FastGP('e_white', 'enemy', 500, 400, 20, 20, 'white').addToPieces(pieces);
 
+     new SwordItem('i_sword', 200, 450).addToPieces(pieces);
     new Move('i_purple',  200, 300, 20, 20, 'purple').addToPieces(pieces);
     new Move('i_blue',  200, 200, 20, 20, 'blue').addToPieces(pieces);
 
