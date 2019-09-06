@@ -1,9 +1,4 @@
 
-//define canvas area
-canvas.width = 600;
-canvas.height = 600;
-canvas.parentElement.style.textAlign = "center";
-
 //initializing all pieces to hold pieces
 let pieces = new Allpieces();
 let hero = new Hero('hero', Sprite({
@@ -33,7 +28,7 @@ function moveSword(p) {
 // register action event -- used in hero class for melee
 on('melee', moveSword);
 
-let runGameLoopUpdate = function(pieces) {
+let runGameLoopUpdate = function(gameState,pieces) {
 
   startLevels(gameState,pieces);
   
@@ -152,14 +147,44 @@ let runGameLoopUpdate = function(pieces) {
 
 let loop = GameLoop({  // create the main game loop
   update: function() { // update the game state
-    runGameLoopUpdate(pieces);
+    switch(gameState.state) {
+      case 'menu':
+        break;
+      case 'game':
+        runGameLoopUpdate(gameState,pieces);
+        break
+      case 'end':
+        //endGameScreen
+        break;
+      case 'credits':
+        //credits
+        break;
+      default:
+        showMenu(gameState);
+    }
   },
   render: function () { // render the game state
-    pieces.renderAll();
-    makeStats(hero);
-    gameState.updateTimer();
+    switch (gameState.state) {
+      case 'menu':
+        showMenu(gameState);
+        break;
+      case 'game':
+        pieces.renderAll();
+        makeStats(hero);
+        gameState.updateTimer();
+        break;
+      case 'end':
+        //endGameScreen
+        break;
+      case 'credits':
+        //credits
+        break;
+      default:
+        showMenu(gameState);
+    }
   }
 });
+loop.start();
 
 
 
