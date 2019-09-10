@@ -5,13 +5,19 @@ function anyDirTrue(c) {
 
 class Game {
     constructor () {
+        this.resetGame();
+    }
+
+    resetGame() {
         this.start = false;
-        this.floor = 12;
+        this.maxFloor = 8;
+        this.floor = 8;
         this.floorStarted = false;
         this.win = false;
         this.state = 'menu';
         this.enemiesKilled = 0;
         this.timer = 0.0;
+        this.swordHealth = 0;
         this.loaded = false;
     }
 
@@ -26,6 +32,7 @@ class Game {
     getTimeSec(){
         return ('0'+Math.floor(this.timer*60) % 60).slice(-2);
     }
+    
 }
 
 class Allpieces {
@@ -100,9 +107,9 @@ class Allpieces {
         }
     }
 
-    clearPieces() {
+    clearPieces(clearHero=false) {
         for (let key in this.pieces) {
-            if (key !== 'hero') {
+            if (key !== 'hero' || clearHero) {
                 delete this.pieces[key];
             }
         }
@@ -273,6 +280,13 @@ class Hero extends Gamepiece {
         }
     }
 
+    setSpeed(x) {
+        this.sprite.dLeft = -x;
+        this.sprite.dRight = x;
+        this.sprite.dUp = -x;
+        this.sprite.dDown = x;
+    }
+
     getMoveAbilityStatus() {
         return this.sprite.moveAbility;
     }
@@ -283,6 +297,7 @@ class Hero extends Gamepiece {
                 this.invulnerable = false
                 this.invulnerableCounter = 0.0;
                 this.renderMe = true;
+                this.setSpeed(5);
             } else {
                 this.invulnerableCounter += 1.0 / 60;
                 if ((this.invulnerableCounter * 60) % modVal < modVal/2) {
@@ -547,8 +562,10 @@ class SwordItem extends FastGP {
         this.sprite.itemType = 'sword'
         this.sprite.x = x;
         this.sprite.y = y;
-        this.sprite.width = 10;
-        this.sprite.height = 10;
-        this.sprite.color = 'white';
+        this.sprite.width = 30;
+        this.sprite.height = 30;
+        let image = new Image();
+        image.src = 'assets/imgs/Sword.png';
+        this.sprite.image = image;
     }
 }

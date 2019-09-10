@@ -30,12 +30,13 @@ let makeStats = function (hero) {
     let yRow2 = 65;
     writeStat(ctx, 20, yRow1, "Health: ", hero.health);
     writeStat(ctx, 220, yRow1, "Floor: ", gameState.floor);
-    writeStat(ctx, 420, yRow1, "Items: ", hero.itemCount);
+    writeStat(ctx, 360, yRow1, "Enemy KOs: ", gameState.enemiesKilled);
 
-    writeStat(ctx, 20, yRow2, "Enemies TOTALLY Killed: ", gameState.enemiesKilled);
-    writeStat(ctx, 420, yRow2, "Time: ", gameState.getTimeMin());
-    writeStat(ctx, 420 + ctx.measureText("Time: " + gameState.getTimeMin()).width, yRow2, ":", gameState.getTimeSec());
-}
+    writeStat(ctx, 20, yRow2, "Time: ", gameState.getTimeMin());
+    writeStat(ctx, 20 + ctx.measureText("Time: " + gameState.getTimeMin()).width, yRow2, ":", gameState.getTimeSec());
+    writeStat(ctx, 220, yRow2, "Items: ", hero.itemCount);
+    writeStat(ctx, 360, yRow2, "Sword Atks: ", gameState.swordHealth);
+    }
 
 //level checker/starter
 let startLevels = function (gameState, pieces) {
@@ -77,7 +78,7 @@ let initializeLevel = function (gameState, pieces) {
     for (let ii = 0; ii<7;ii++){
         new Tower('tower' + ii, 'tower',25, 170 +60 * ii).addToPieces(pieces);
     } 
-    new FastGP('marker', 'marker', 25 + 60 / 2 - 10, 150 + 420 / 12 * (12-gameState.floor), 20,20,'green').addToPieces(pieces);
+    new FastGP('marker', 'marker', 25 + 60 / 2 - 10, 150 + 420 / 8 * (8-gameState.floor), 20,20,'green').addToPieces(pieces);
 
     return pieces.getPiece('hero')
 }
@@ -123,53 +124,15 @@ let testlevel12 = function (gameState,pieces) {
 
     new SwordItem('i_sword_1', 350, 350).addToPieces(pieces);
     new SwordItem('i_sword_2', 200, 350).addToPieces(pieces);
-    new Move('i_purple',  200, 300, 20, 20, 'purple').addToPieces(pieces);
-    new Move('i_blue',  200, 200, 20, 20, 'blue').addToPieces(pieces);
+    new Move('i_purple', 200, 300, 20, 20, 'purple').addToPieces(pieces);
+    new Move('i_blue', 200, 200, 20, 20, 'blue').addToPieces(pieces);
 
     // Enemies
     // var a = new Enemy('e_red', 'enemy', 150, 200, 20, 20, 'red', 'horizontal').addToPieces(pieces);
     var b = new Enemy('e_purple', 'enemy', 250, 200, 20, 20, 'purple', 'vertical', 200, 5).addToPieces(pieces);
 
     new Heart('h1', 400, 150).addToPieces(pieces);
-
     new Stairs('stair1', 300, 520).addToPieces(pieces);
-
-    
-}
-
-let testlevel11 = function (gameState, pieces) {
-
-    let hero = initializeLevel(gameState, pieces);
-    hero.sprite.x = 120;
-    hero.sprite.y = 550;
-
-     var a = new Enemy('e1', 'enemy', 150, 200, 20, 20, 'red', 'vertical').addToPieces(pieces);
-    new Stairs('stair1', 550, 120).addToPieces(pieces);
-
-}
-
-let level10 = function (gameState,pieces) { 
-    let hero = initializeLevel(gameState, pieces);
-    hero.sprite.x = 120;
-    hero.sprite.y = 400;
-
-    new Stairs('stair1', 300, 300).addToPieces(pieces);
-}
-
-let level9 = function (gameState,pieces) { 
-
-    let hero = initializeLevel(gameState, pieces);
-    hero.sprite.x = 550;
-    hero.sprite.y = 120;
-
-    new Wall('w7', 'v', 200, 200, 500).addToPieces(pieces);
-    new Wall('w8', 'v', 300, 100, 400).addToPieces(pieces);
-    new Wall('w9', 'v', 400, 200, 400).addToPieces(pieces);
-    new Wall('w10', 'v', 500, 100, 400).addToPieces(pieces);
-
-    var a = new Enemy('e1', 'enemy', 150, 200, 20, 20, 'red', 'horizontal').addToPieces(pieces);
-
-    new Stairs('stair1', 140, 550).addToPieces(pieces);
 
 }
 
@@ -179,10 +142,10 @@ let level8 = function (gameState,pieces) {
     let hero = initializeLevel(gameState, pieces);
     hero.sprite.x = 550;
     hero.sprite.y = 550;
-    new Wall('w7', 'v', 200, 200, 500).addToPieces(pieces);
+    
     new Heart('h2', 300, 150).addToPieces(pieces);
     new SwordItem('s1',120, 330).addToPieces(pieces);
-    new Enemy('e_purple0', 'enemy', 120, 200, 20, 20, 'grey', 'vertical', 220, 5).addToPieces(pieces);
+    new Enemy('e_purple0', 'enemy', 120, 200, 20, 20, 'purple', 'vertical', 220, 5).addToPieces(pieces);
     new Enemy('e_purple1', 'enemy', 120, 400, 20, 20, 'purple', 'vertical', 220, 5).addToPieces(pieces);
     new Enemy('e_purple2', 'enemy', 160, 200, 20, 20, 'purple', 'vertical', 100, 5).addToPieces(pieces);
     new Enemy('e_purple3', 'enemy', 200, 300, 20, 20, 'purple', 'vertical', 200, 5).addToPieces(pieces);
@@ -191,7 +154,7 @@ let level8 = function (gameState,pieces) {
     new Enemy('e_purple11', 'enemy', 340, 300, 20, 20, 'purple', 'vertical', 150, 5).addToPieces(pieces);
     new Enemy('e_purple12', 'enemy', 400, 300, 20, 20, 'red', 'vertical', 185, 5).addToPieces(pieces);
     new Enemy('e_purple13', 'enemy', 440, 300, 20, 20, 'red', 'vertical', 185, 7).addToPieces(pieces);
-    new Enemy('e_purple16', 'enemy', 550, 300, 20, 20, 'grey', 'vertical', 185, 1).addToPieces(pieces);
+    new Enemy('e_purple16', 'enemy', 550, 300, 20, 20, 'purple', 'vertical', 185, 1).addToPieces(pieces);
 
     new Enemy('e_purple10', 'enemy', 400, 400, 20, 20, 'yellow', 'horizontal', 150, 1).addToPieces(pieces);
     new Enemy('e_purple9', 'enemy', 340, 380, 20, 20, 'yellow', 'horizontal', 150, 6).addToPieces(pieces);
@@ -228,15 +191,53 @@ let level7 = function (gameState,pieces) {
 }
 
 // blocks stuck in wall to hide shortcuts
-let level6 = function (gameState,pieces) { } 
+let level6 = function (gameState,pieces) { 
 
-let level5 = function (gameState,pieces) { }
+    let hero = initializeLevel(gameState, pieces);
+    hero.sprite.x = 120;
+    hero.sprite.y = 400;
 
-let level4 = function (gameState,pieces) { }
+    new Stairs('stair1', 300, 300).addToPieces(pieces);
 
-let level3 = function (gameState,pieces) { }
+}
 
-let level2 = function (gameState,pieces) { }
+let level5 = function (gameState,pieces) { 
+    let hero = initializeLevel(gameState, pieces);
+    hero.sprite.x = 550;
+    hero.sprite.y = 120;
 
-let level1 = function (gameState,pieces) { }
+    // new Wall('w7', 'v', 200, 200, 500).addToPieces(pieces);
+    // new Wall('w8', 'v', 300, 100, 400).addToPieces(pieces);
+    // new Wall('w9', 'v', 400, 200, 400).addToPieces(pieces);
+    // new Wall('w10', 'v', 500, 100, 400).addToPieces(pieces);
+
+    var a = new Enemy('e1', 'enemy', 150, 200, 20, 20, 'red', 'horizontal').addToPieces(pieces);
+
+    new Stairs('stair1', 140, 550).addToPieces(pieces);
+
+}
+
+
+
+
+let level2 = function (gameState,pieces) { 
+    let hero = initializeLevel(gameState, pieces);
+    hero.sprite.x = 120;
+    hero.sprite.y = 400;
+
+    new Stairs('stair1', 300, 300).addToPieces(pieces);
+
+}
+
+let level1 = function (gameState,pieces) { 
+    let hero = initializeLevel(gameState, pieces);
+    hero.sprite.x = 120;
+    hero.sprite.y = 400;
+
+    new Stairs('stair1', 300, 300).addToPieces(pieces);
+
+}
+
+
+
 

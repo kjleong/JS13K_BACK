@@ -1,15 +1,21 @@
 
-//initializing all pieces to hold pieces
-let pieces = new Allpieces();
-let hero = new Hero('hero', Sprite({
-  x: 500,        // starting x,y position of the sprite
-  y: 500,
-  color: 'green',  // fill color of the sprite rectangle
-  width: 20,     // width and height of the sprite rectangle
-  height: 20,
-}));
-hero.addToPieces(pieces)
-hero.health = 10;
+function resetHero(pieces,hero) {
+  pieces.purgePieces(clearHero=true);
+  hero.sprite.x = 500;       // starting x,y position of the sprite
+  hero.sprite.y = 500;
+  hero.sprite.color = 'green'; // fill color of the sprite rectangle
+  hero.sprite.width = 20;    // width and height of the sprite rectangle
+  hero.sprite.height = 20;
+  hero.health = 10;
+  hero.sprite.swordHealth = 0;
+  hero.sprite.hasSword = false;
+  hero.sprite.direction = 'up';
+  hero.invulnerable = false
+  hero.invulnerableCounter = 0.0;
+  hero.renderMe = true;
+  hero.setSpeed(5);
+  hero.addToPieces(pieces)
+}
 
 // Event Call backs 
 function moveSword(p) {
@@ -27,6 +33,10 @@ function moveSword(p) {
   }  
 };
 
+let pieces = new Allpieces();
+let hero = new Hero('hero', Sprite({}));
+resetHero(pieces,hero);
+
 // register action event -- used in hero class for melee
 on('melee', moveSword);
 
@@ -34,7 +44,6 @@ let runGameLoopUpdate = function(gameState,pieces) {
 
   startLevels(gameState,pieces);
   
-
   // Going to define hero's update and dependencies here
   // extracting pieces by type
   let hero = pieces.getPiece('hero');
@@ -81,6 +90,7 @@ let runGameLoopUpdate = function(gameState,pieces) {
       if(item.sprite.itemType == 'sword') {
         hero.sprite.hasSword = true;
         hero.sprite.swordHealth = 10;
+        gameState.swordHealth = hero.sprite.swordHealth
       }
       hero.itemCount += 1;
       item.kill();
@@ -96,6 +106,7 @@ let runGameLoopUpdate = function(gameState,pieces) {
     if (hero.sprite.collidesWith(enemy.sprite) && !hero.invulnerable) { // hero interact with enemy
       hero.health -= 1;
       hero.invulnerable = true;
+      hero.setSpeed(1);
     }
   
     if (swordPiece) { // sword interaction with enemy
@@ -108,7 +119,7 @@ let runGameLoopUpdate = function(gameState,pieces) {
   hero.blinkEffect(30);
 
   //define what would stop movements
-  hero.setStopMove(hero.touchedOn({ ...wallPieces, ...immovablePieces, ...stairPieces, }));
+  hero.setStopMove(hero.touchedOn({ ...wallPieces, ...immovablePieces, ...stairPieces}));
   for (let key in movablePieces) {
     let move = movablePieces[key];
     move.setStopMove(move.touchedOn({ ...wallPieces, ...immovablePieces, ...stairPieces, ...enemyPieces}));
@@ -122,13 +133,6 @@ let runGameLoopUpdate = function(gameState,pieces) {
     }
     hero.updateStopMove(move.getStopMove(), true);
   }
-
-  //TODO: sav for later
-  // Object.values(enemyPieces).forEach(e => {
-  //   if (Object.values(movePieces).some((x) => e.sprite.collidesWith(x.sprite))) {
-  //     e.sprite.positiveDirection = !e.sprite.positiveDirection;
-  //   }
-  // });
   
   // update sword swing
   if (swordPiece) {
@@ -138,6 +142,7 @@ let runGameLoopUpdate = function(gameState,pieces) {
       swordPiece.kill();
       hero.sprite.attack = false;
       hero.sprite.swordHealth -= 1; // sword vitality
+      gameState.swordHealth = hero.sprite.swordHealth;
       swordPiece.renderTime = 0.5;
     }
   }
@@ -147,12 +152,23 @@ let runGameLoopUpdate = function(gameState,pieces) {
     gameState.floor -= 1;
     gameState.floorStarted = false;
     pieces.clearPieces();
-    console.log(gameState);
+    if (gameState.floor <= 0) {
+      gameState.state = 'end';
+      gameState.win = true;
+    }
   }
+
+  if (hero.health <= 0) {
+    gameState.state = 'end';
+  }
+
+  console.log(hero);
   
   // update everything else by sprite.update function
   pieces.updateAll();
   pieces.purgePieces();
+
+  
   
 }
 
@@ -165,19 +181,15 @@ let loop = GameLoop({  // create the main game loop
         runGameLoopUpdate(gameState,pieces);
         break
       case 'end':
-        //endGameScreen
-        break;
-      case 'credits':
-        //credits
         break;
       default:
-        showMenu(gameState);
+        showMenu();
     }
   },
   render: function () { // render the game state
     switch (gameState.state) {
       case 'menu':
-        showMenu(gameState);
+        showMenu();
         break;
       case 'game':
         pieces.renderAll();
@@ -185,10 +197,7 @@ let loop = GameLoop({  // create the main game loop
         gameState.updateTimer();
         break;
       case 'end':
-        //endGameScreen
-        break;
-      case 'credits':
-        //credits
+        endGame();
         break;
       default:
         showMenu(gameState);
