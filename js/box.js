@@ -293,7 +293,7 @@ class Hero extends Gamepiece {
 
     blinkEffect(modVal) {
         if (this.invulnerable) {
-            if (this.invulnerableCounter > 2.0) {
+            if (this.invulnerableCounter > 0.5) {
                 this.invulnerable = false
                 this.invulnerableCounter = 0.0;
                 this.renderMe = true;

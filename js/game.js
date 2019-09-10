@@ -60,7 +60,7 @@ let runGameLoopUpdate = function(gameState,pieces) {
     let move = movePieces[key];
     let moveEnable = false;
     if (anyDirTrue(hero.contactedOnWith(move))) {
-      if (hero.getMoveAbilityStatus()) {
+      if (hero.getMoveAbilityStatus() && !hero.invulnerable) {
         moveEnable = true;
       }
     }
@@ -106,7 +106,6 @@ let runGameLoopUpdate = function(gameState,pieces) {
     if (hero.sprite.collidesWith(enemy.sprite) && !hero.invulnerable) { // hero interact with enemy
       hero.health -= 1;
       hero.invulnerable = true;
-      hero.setSpeed(1);
     }
   
     if (swordPiece) { // sword interaction with enemy
@@ -116,7 +115,7 @@ let runGameLoopUpdate = function(gameState,pieces) {
       }
     }
   }
-  hero.blinkEffect(30);
+  hero.blinkEffect(5);
 
   //define what would stop movements
   hero.setStopMove(hero.touchedOn({ ...wallPieces, ...immovablePieces, ...stairPieces}));
@@ -168,8 +167,11 @@ let runGameLoopUpdate = function(gameState,pieces) {
   pieces.updateAll();
   pieces.purgePieces();
 
-  
-  
+  if (keyPressed('esc')) {
+    gameState.resetGame();
+    gameState.state = 'menu';
+    resetHero(pieces, hero)
+  } 
 }
 
 let loop = GameLoop({  // create the main game loop

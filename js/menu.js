@@ -34,12 +34,13 @@ let showMenu = function () {
   ctx.fillText("Back Down", canvas.width/2, 100);
   ctx.fillText("The Tower", canvas.width / 2, 200);
   ctx.font = "30px Arial";
-  ctx.fillText("Press Enter To Play", canvas.width/2, 400);
+  ctx.fillText("Press Enter To Play", canvas.width/2, 350);
 
   ctx.textAlign = "left";
   ctx.font = "20px Arial";
-  ctx.fillText("[a] to attack non-gray (pick up sword first)", canvas.width / 4, 500);
-  ctx.fillText("[z] to move gray boxes", canvas.width / 4, 550);
+  ctx.fillText("[a] to attack non-gray (pick up sword first)", canvas.width / 4, 450);
+  ctx.fillText("[z] to move gray boxes", canvas.width / 4, 500);
+  ctx.fillText("[esc] to restart", canvas.width / 4, 550);
 
   if (keyPressed('enter')) {
     gameState.state = 'game';
