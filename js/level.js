@@ -43,11 +43,11 @@ let startLevels = function (gameState, pieces) {
     if (!gameState.floorStarted) {
 
         switch (gameState.floor) {
-            case 12: level7(gameState, pieces); break;//testlevel12(gameState, pieces); break;//testlevel12(gameState, pieces); break;
-            case 11: level7(gameState, pieces); break;//testlevel11(gameState, pieces); break;
-            case 10: level10(gameState, pieces); break;
-            case 9: level9(gameState, pieces); break;
-            case 8: level8(gameState, pieces); break;
+            //case 12: level7(gameState, pieces); break;//testlevel12(gameState, pieces); break;//testlevel12(gameState, pieces); break;
+            //case 11: level7(gameState, pieces); break;//testlevel11(gameState, pieces); break;
+            //case 10: level10(gameState, pieces); break;
+            //case 9: level9(gameState, pieces); break;
+            case 8: level7(gameState, pieces); break;
             case 7: level7(gameState, pieces); break;
             case 6: level6(gameState, pieces); break;
             case 5: level5(gameState, pieces); break;
@@ -174,9 +174,11 @@ let level7 = function (gameState,pieces) {
     hero.sprite.x = 550;
     hero.sprite.y = 550;
     new Wall('w7', 'h', 200, 200, 500).addToPieces(pieces);
-    new Wall('w9', 'h', 200, 240, 340).addToPieces(pieces);
-    new Wall('w10', 'v', 530, 250, 120).addToPieces(pieces);
+    new Wall('w9', 'h', 200, 240, 315).addToPieces(pieces);
+    new Wall('w10', 'v', 530, 260, 120).addToPieces(pieces);
     new Wall('w11', 'h', 530, 370, 60).addToPieces(pieces);
+    new Wall('w12', 'v', 505, 250, 20).addToPieces(pieces);
+    new Wall('w13', 'h', 510, 260, 20).addToPieces(pieces);
 
     new Move('b0', 500, 550, 20, 20, 'grey').addToPieces(pieces);
     new Move('b1', 220, 210, 20, 20, 'grey').addToPieces(pieces);
@@ -184,7 +186,7 @@ let level7 = function (gameState,pieces) {
     new Move('b3', 260, 220, 20, 20, 'grey').addToPieces(pieces);
 
     new Enemy('e_purple15', 'enemy', 460, 550, 20, 20, 'yellow', 'horizontal', 150, 5).addToPieces(pieces);
-    new Enemy('e_purple16', 'enemy', 300, 210, 20, 20, 'yellow', 'horizontal', 150, 1).addToPieces(pieces);
+    // new Enemy('e_purple16', 'enemy', 300, 210, 20, 20, 'yellow', 'horizontal', 150, 1).addToPieces(pieces);
     new Enemy('e_purple17', 'enemy', 555, 300, 20, 20, 'yellow', 'vertical', 150, 1).addToPieces(pieces);
     
     new Stairs('stair1', 550, 330).addToPieces(pieces);
