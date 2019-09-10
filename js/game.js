@@ -13,6 +13,7 @@ function resetHero(pieces,hero) {
   hero.invulnerable = false
   hero.invulnerableCounter = 0.0;
   hero.renderMe = true;
+  hero.setSpeed(5);
   hero.addToPieces(pieces)
 }
 
@@ -40,8 +41,6 @@ resetHero(pieces,hero);
 on('melee', moveSword);
 
 let runGameLoopUpdate = function(gameState,pieces) {
-
-
 
   startLevels(gameState,pieces);
   
@@ -107,6 +106,7 @@ let runGameLoopUpdate = function(gameState,pieces) {
     if (hero.sprite.collidesWith(enemy.sprite) && !hero.invulnerable) { // hero interact with enemy
       hero.health -= 1;
       hero.invulnerable = true;
+      hero.setSpeed(1);
     }
   
     if (swordPiece) { // sword interaction with enemy
@@ -119,7 +119,7 @@ let runGameLoopUpdate = function(gameState,pieces) {
   hero.blinkEffect(30);
 
   //define what would stop movements
-  hero.setStopMove(hero.touchedOn({ ...wallPieces, ...immovablePieces, ...stairPieces, }));
+  hero.setStopMove(hero.touchedOn({ ...wallPieces, ...immovablePieces, ...stairPieces}));
   for (let key in movablePieces) {
     let move = movablePieces[key];
     move.setStopMove(move.touchedOn({ ...wallPieces, ...immovablePieces, ...stairPieces, ...enemyPieces}));
@@ -133,13 +133,6 @@ let runGameLoopUpdate = function(gameState,pieces) {
     }
     hero.updateStopMove(move.getStopMove(), true);
   }
-
-  //TODO: sav for later
-  // Object.values(enemyPieces).forEach(e => {
-  //   if (Object.values(movePieces).some((x) => e.sprite.collidesWith(x.sprite))) {
-  //     e.sprite.positiveDirection = !e.sprite.positiveDirection;
-  //   }
-  // });
   
   // update sword swing
   if (swordPiece) {
@@ -163,16 +156,19 @@ let runGameLoopUpdate = function(gameState,pieces) {
       gameState.state = 'end';
       gameState.win = true;
     }
-    console.log(gameState);
   }
 
   if (hero.health <= 0) {
     gameState.state = 'end';
   }
+
+  console.log(hero);
   
   // update everything else by sprite.update function
   pieces.updateAll();
   pieces.purgePieces();
+
+  
   
 }
 

@@ -280,6 +280,13 @@ class Hero extends Gamepiece {
         }
     }
 
+    setSpeed(x) {
+        this.sprite.dLeft = -x;
+        this.sprite.dRight = x;
+        this.sprite.dUp = -x;
+        this.sprite.dDown = x;
+    }
+
     getMoveAbilityStatus() {
         return this.sprite.moveAbility;
     }
@@ -290,6 +297,7 @@ class Hero extends Gamepiece {
                 this.invulnerable = false
                 this.invulnerableCounter = 0.0;
                 this.renderMe = true;
+                this.setSpeed(5);
             } else {
                 this.invulnerableCounter += 1.0 / 60;
                 if ((this.invulnerableCounter * 60) % modVal < modVal/2) {
