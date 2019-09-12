@@ -239,18 +239,16 @@ let level3 = function (gameState, pieces) {
 
     let ii = 0;
     let jj = 0;
-    let w1;
+    let levelWalls = {};
     for (ii=0; ii <= 10; ii++) {
         for (jj=0; jj <= 10; jj++) {
             new Enemy(jj +'e' + ii , 'enemy', 120 + 60 * ii, 120 + 60 * jj, 20, 20, 'red', ((ii+jj)%2===0) ? 'horizontal':'vertical', 10, 5).addToPieces(pieces);
         }
     }
 
-    new Wall('w_1', 'h', 145, 450, 400).addToPieces(pieces);
+    new Wall('w_1', 'h', 145, 220, 400).addToPieces(pieces);
+    levelWalls['w_1'] = pieces.getPiece('w_1');
     pieces.getPiece('w_1').renderMe = false;
-    if (hero.is)
-
-
 
     new Heart('h1', 153, 253).addToPieces(pieces);
     new Heart('h2', 203, 403).addToPieces(pieces);
