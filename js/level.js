@@ -43,7 +43,7 @@ let startLevels = function (gameState, pieces) {
     if (!gameState.floorStarted) {
 
         switch (gameState.floor) {
-            case 8: level3(gameState, pieces); break;
+            case 8: level2(gameState, pieces); break;
             case 7: level7(gameState, pieces); break;
             case 6: level6(gameState, pieces); break;
             case 5: level5(gameState, pieces); break;
@@ -261,9 +261,32 @@ let level3 = function (gameState, pieces) {
 let level2 = function (gameState,pieces) { 
     let hero = initializeLevel(gameState, pieces);
     hero.sprite.x = 120;
-    hero.sprite.y = 400;
+    hero.sprite.y = 120;
 
-    new Stairs('stair1', 300, 300).addToPieces(pieces);
+    new Stairs('stair1', 335, 455).addToPieces(pieces);
+    new Wall('w_1', 'h', 100, 150, 450).addToPieces(pieces);
+    new Wall('w_2', 'v', 550, 150, 400).addToPieces(pieces);
+    new Wall('w_3', 'v', 480, 200, 400).addToPieces(pieces);
+    new Wall('w_4', 'h', 100, 200, 300).addToPieces(pieces);
+
+
+    new Enemy('e1', 'enemy', 150, 125, 20, 20, 'red', 'vertical').addToPieces(pieces);
+    new Enemy('e2', 'enemy', 150, 175, 20, 20, 'red', 'vertical',).addToPieces(pieces);
+    new Enemy('e3', 'enemy', 250, 175, 20, 20, 'red', 'vertical').addToPieces(pieces);
+    new Enemy('e4', 'enemy', 350, 175, 20, 20, 'red', 'vertical').addToPieces(pieces);
+    new SwordItem('sw1', 110, 165).addToPieces(pieces);
+    new Heart('h2', 200, 165).addToPieces(pieces);
+    new Enemy('e5', 'enemy', 360, 400, 20, 20, 'red', 'vertical', 0, 0).addToPieces(pieces);
+    new Heart('h3', 250, 350).addToPieces(pieces);
+
+    let ii,jj;
+    for (ii = 0; ii < 10; ii++) {
+        for (jj = 0; jj < 10; jj++) {
+            new Move(jj+'b'+ii, 220+ii*20, 300+jj*20, 20, 20, 'grey').addToPieces(pieces);
+        }
+    }
+    
+
 
 }
 
