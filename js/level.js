@@ -43,11 +43,7 @@ let startLevels = function (gameState, pieces) {
     if (!gameState.floorStarted) {
 
         switch (gameState.floor) {
-            case 12: level7(gameState, pieces); break;//testlevel12(gameState, pieces); break;//testlevel12(gameState, pieces); break;
-            case 11: level7(gameState, pieces); break;//testlevel11(gameState, pieces); break;
-            case 10: level10(gameState, pieces); break;
-            case 9: level9(gameState, pieces); break;
-            case 8: level8(gameState, pieces); break;
+            case 8: level3(gameState, pieces); break;
             case 7: level7(gameState, pieces); break;
             case 6: level6(gameState, pieces); break;
             case 5: level5(gameState, pieces); break;
@@ -217,7 +213,51 @@ let level5 = function (gameState,pieces) {
 
 }
 
+let level4 = function (gameState, pieces) {
+    let hero = initializeLevel(gameState, pieces);
+    hero.sprite.x = 340;
+    hero.sprite.y = 550;
 
+    new Wall('w_1', 'v', 345, 100, 440).addToPieces(pieces);
+
+    let ii = 0;
+    for (ii=0;ii<=10;ii++) {
+        new Enemy('e'+ii, 'enemy', 220, 200+40*ii, 20, 20, 'red', 'horizontal', 100,ii+1).addToPieces(pieces);
+    }
+    for (ii=0; ii <= 10; ii++) {
+        new Enemy('e' + ii+10, 'enemy', 460, 200 + 40 * ii, 20, 20, 'red', 'horizontal', 100, 10-(ii)).addToPieces(pieces);
+    }
+
+    new Stairs('stair1', 220, 120).addToPieces(pieces);
+    new SwordItem('sw1', 460, 120).addToPieces(pieces);
+}
+
+let level3 = function (gameState, pieces) {
+    let hero = initializeLevel(gameState, pieces);
+    hero.sprite.x = 565;
+    hero.sprite.y = 565;
+
+    let ii = 0;
+    let jj = 0;
+    let w1;
+    for (ii=0; ii <= 10; ii++) {
+        for (jj=0; jj <= 10; jj++) {
+            new Enemy(jj +'e' + ii , 'enemy', 120 + 60 * ii, 120 + 60 * jj, 20, 20, 'red', ((ii+jj)%2===0) ? 'horizontal':'vertical', 10, 5).addToPieces(pieces);
+        }
+    }
+
+    new Wall('w_1', 'h', 145, 450, 400).addToPieces(pieces);
+    pieces.getPiece('w_1').renderMe = false;
+    if (hero.is)
+
+
+
+    new Heart('h1', 153, 253).addToPieces(pieces);
+    new Heart('h2', 203, 403).addToPieces(pieces);
+    new SwordItem('sw1', 140, 120).addToPieces(pieces);
+
+    new Stairs('stair1', 110, 145).addToPieces(pieces);
+}
 
 
 let level2 = function (gameState,pieces) { 
