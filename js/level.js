@@ -162,10 +162,93 @@ let level7 = function (gameState,pieces) {
 
 // blocks stuck in wall to hide shortcuts
 let level6 = function (gameState,pieces) { 
-
+    gameState.floorStarted = true;
     let hero = initializeLevel(gameState, pieces);
     hero.sprite.x = 120;
     hero.sprite.y = 400;
+
+    const walls = [
+        {a:'h', x:280, y:270, l: 90},
+
+        {a:'h', x:280, y:350, l: 80},
+        {a:'v', x:280, y:280, l: 80},
+        {a:'v', x:350, y:280, l: 50},
+
+        {a:'v', x:310, y:230, l: 40},
+        {a:'v', x:310, y:360, l: 30},
+        {a:'h', x:360, y:310, l: 50},
+        {a:'h', x:240, y:310, l: 40},
+
+        {a:'v', x:410, y:220, l: 200},
+        {a:'h', x:220, y:410, l: 190},
+        {a:'h', x:270, y:210, l: 50},
+        {a:'h', x:340, y:210, l: 40},
+        {a:'h', x:240, y:210, l: 10},
+
+        {a:'v', x:240, y:170, l: 50},
+        {a:'v', x:370, y:170, l: 50},
+        {a:'v', x:240, y:420, l: 50},
+        {a:'v', x:370, y:420, l: 50},
+        {a:'h', x:240, y:470, l: 140},
+        {a:'h', x:240, y:160, l: 140},
+        {a:'v', x:210, y:230, l: 190},
+
+    ]
+
+    walls.forEach((e,i) => new Wall(`w1${i}`,e.a,e.x, e.y, e.l).addToPieces(pieces))
+    const MoveCoors = [
+        {x:320, y:260},
+        {x:290, y:260},
+
+        {x:330, y:350},
+        {x:300, y:350},
+
+        {x:350, y:300},
+        {x:350, y:300},
+        {x:350, y:270},
+
+        {x:270, y:340},
+        {x:270, y:310},
+        {x:270, y:280},
+
+        {x:320, y:260},
+        {x:320, y:260},
+        {x:320, y:260},
+
+        {x:350, y:330},
+        {x:350, y:300},
+        {x:350, y:270},
+
+        {x:300, y:220},
+        {x:310, y:390},
+        {x:390, y:300},
+        {x:220, y:310},
+
+        {x:380,y:200},
+        {x:400,y:210},
+        {x:320,y:200},
+        {x:350,y:200},
+        {x:280,y:200},
+        {x:250,y:200},
+        {x:220,y:200},
+
+        {x:330,y:400},
+        {x:360,y:400},
+        {x:280,y:400},
+        {x:240,y:400},
+
+        {x:410,y:230},
+        {x:410,y:270},
+        {x:410,y:350},
+        {x:410,y:400},
+
+        {x:210,y:210},
+        {x:210,y:270},
+        {x:210,y:350},
+        {x:210,y:400},
+    ]
+
+    MoveCoors.forEach((m,i) => new Move(`m1${i}`,m.x,m.y,20, 20, 'grey').addToPieces(pieces))
 
     new Stairs('stair1', 300, 300).addToPieces(pieces);
 

@@ -160,7 +160,6 @@ let runGameLoopUpdate = function(gameState,pieces) {
   if (hero.health <= 0) {
     gameState.state = 'end';
   }
-
   // update everything else by sprite.update function
   pieces.updateAll();
   pieces.purgePieces();
