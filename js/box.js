@@ -10,8 +10,8 @@ class Game {
 
     resetGame() {
         this.start = false;
-        this.maxFloor = 8;
-        this.floor = 8;
+        this.maxFloor = 7;
+        this.floor = 7;
         this.floorStarted = false;
         this.win = false;
         this.state = 'menu';
