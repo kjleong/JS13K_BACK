@@ -29,8 +29,8 @@ let showMenu = function () {
 
   ctx.textAlign = "center";
   ctx.textBaseline = "top";
-  ctx.fillText("Back Down", canvas.width/2, 100);
-  ctx.fillText("The Tower", canvas.width / 2, 200);
+  ctx.fillText("Back Down", canvas.width/2, 50);
+  ctx.fillText("The Tower", canvas.width / 2, 150);
   ctx.font = "30px Arial";
   ctx.fillText("Press Enter To Play", canvas.width/2, 350);
 
@@ -43,6 +43,10 @@ let showMenu = function () {
   if (keyPressed('enter')) {
     gameState.state = 'game';
   }
+  let ii;
+  for (ii = 0; ii < 7; ii++) {
+    new Tower('tower' + ii, 'tower', 25, 200 + 60 * ii).sprite.render()
+  } 
 }
 
 let endGame = function () {
