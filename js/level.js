@@ -43,11 +43,11 @@ let startLevels = function (gameState, pieces) {
     if (!gameState.floorStarted) {
 
         switch (gameState.floor) {
-            case 12: level7(gameState, pieces); break;//testlevel12(gameState, pieces); break;//testlevel12(gameState, pieces); break;
-            case 11: level7(gameState, pieces); break;//testlevel11(gameState, pieces); break;
-            case 10: level10(gameState, pieces); break;
+            case 12: level6(gameState, pieces); break;//testlevel12(gameState, pieces); break;//testlevel12(gameState, pieces); break;
+            case 11: level6(gameState, pieces); break;//testlevel11(gameState, pieces); break;
+            case 10: level6(gameState, pieces); break;
             case 9: level9(gameState, pieces); break;
-            case 8: level8(gameState, pieces); break;
+            case 8: level6(gameState, pieces); break;
             case 7: level7(gameState, pieces); break;
             case 6: level6(gameState, pieces); break;
             case 5: level5(gameState, pieces); break;
@@ -190,12 +190,72 @@ let level7 = function (gameState,pieces) {
     new Stairs('stair1', 550, 330).addToPieces(pieces);
 }
 
+function genMove(num){
+    let items = [{}];
+    for(let i; i < num; i++) {
+        items.push(new Move(`b${num}`,))
+    }
+}
+
+function wallBox(){
+    for(let i; i < num; i++) {
+        items.push(new Wall(`w${num}`,))
+    }
+}
 // blocks stuck in wall to hide shortcuts
 let level6 = function (gameState,pieces) { 
-
+    gameState.floorStarted = true;
     let hero = initializeLevel(gameState, pieces);
     hero.sprite.x = 120;
     hero.sprite.y = 400;
+
+    new Move('b0', 500, 550, 20, 20, 'grey').addToPieces(pieces);
+    //inner walls
+    new Wall('w10','h', 280, 270, 90).addToPieces(pieces);
+
+    new Wall('w11','h', 280, 350, 80).addToPieces(pieces);
+    new Wall('w12','v', 280, 280, 80).addToPieces(pieces);
+    new Wall('w13','v', 350, 280, 50).addToPieces(pieces);
+       // outer walls
+    new Wall('w14','v', 310, 230, 40).addToPieces(pieces);
+    new Wall('w15','v', 310, 360, 30).addToPieces(pieces);
+    new Wall('w16','h', 360, 310, 40).addToPieces(pieces);
+    new Wall('w17','h', 240, 310, 40).addToPieces(pieces);
+
+    new Wall('w18','v', 400, 220, 190).addToPieces(pieces);
+    new Wall('w18','h', 400, 220, 190).addToPieces(pieces);
+
+    new Move('w10-b1', 320, 260, 20, 20, 'grey').addToPieces(pieces);
+    new Move('w10-b2', 290, 260, 20, 20, 'grey').addToPieces(pieces);
+
+    new Move('w11-b1', 330, 350, 20, 20, 'grey').addToPieces(pieces);
+    new Move('w11-b2', 300, 350, 20, 20, 'grey').addToPieces(pieces);
+
+    
+    new Move('w12-b1', 350, 330, 20, 20, 'grey').addToPieces(pieces);
+    new Move('w12-b2', 350, 300, 20, 20, 'grey').addToPieces(pieces);
+    new Move('w12-b3', 350, 270, 20, 20, 'grey').addToPieces(pieces);
+
+    new Move('w13-b1', 270, 340, 20, 20, 'grey').addToPieces(pieces);
+    new Move('w13-b2', 270, 310, 20, 20, 'grey').addToPieces(pieces);
+    new Move('w13-b3', 270, 280, 20, 20, 'grey').addToPieces(pieces);
+
+    
+    new Move('b1', 350, 330, 20, 20, 'grey').addToPieces(pieces);
+    new Move('b2', 350, 300, 20, 20, 'grey').addToPieces(pieces);
+    new Move('b3', 350, 270, 20, 20, 'grey').addToPieces(pieces);
+
+ 
+
+    new Move('w18-b1', 300, 230, 20, 20, 'grey').addToPieces(pieces);
+    new Move('w19-b1', 310, 380, 20, 20, 'grey').addToPieces(pieces);
+    new Move('w20-b1', 380, 300, 20, 20, 'grey').addToPieces(pieces);
+    new Move('w21-b1', 240, 310, 20, 20, 'grey').addToPieces(pieces);
+    
+
+
+    // multiple block generator
+    
 
     new Stairs('stair1', 300, 300).addToPieces(pieces);
 
