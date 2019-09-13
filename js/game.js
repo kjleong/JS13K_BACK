@@ -1,6 +1,6 @@
 
 function resetHero(pieces,hero) {
-  pieces.purgePieces(clearHero=true);
+  pieces.clearPieces();
   hero.sprite.x = 500;       // starting x,y position of the sprite
   hero.sprite.y = 500;
   hero.sprite.color = 'green'; // fill color of the sprite rectangle
@@ -160,7 +160,6 @@ let runGameLoopUpdate = function(gameState,pieces) {
   if (hero.health <= 0) {
     gameState.state = 'end';
   }
-  
   // update everything else by sprite.update function
   pieces.updateAll();
   pieces.purgePieces();

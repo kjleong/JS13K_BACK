@@ -1,17 +1,15 @@
 
 let { 
-  init, GameLoop,
-  initPointer, 
-  track, 
+  init, 
+  GameLoop,
   Sprite, 
-  setStoreItem, 
-  getStoreItem,
   initKeys,
   keyPressed,
   bindKeys,
   on,
   emit
 } = kontra;
+
 
 initKeys();
 

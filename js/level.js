@@ -43,11 +43,7 @@ let startLevels = function (gameState, pieces) {
     if (!gameState.floorStarted) {
 
         switch (gameState.floor) {
-            case 12: level6(gameState, pieces); break;//testlevel12(gameState, pieces); break;//testlevel12(gameState, pieces); break;
-            case 11: level6(gameState, pieces); break;//testlevel11(gameState, pieces); break;
-            case 10: level6(gameState, pieces); break;
-            case 9: level9(gameState, pieces); break;
-            case 8: level6(gameState, pieces); break;
+            case 8: level8(gameState, pieces); break;
             case 7: level7(gameState, pieces); break;
             case 6: level6(gameState, pieces); break;
             case 5: level5(gameState, pieces); break;
@@ -78,63 +74,37 @@ let initializeLevel = function (gameState, pieces) {
     for (let ii = 0; ii<7;ii++){
         new Tower('tower' + ii, 'tower',25, 170 +60 * ii).addToPieces(pieces);
     } 
-    new FastGP('marker', 'marker', 25 + 60 / 2 - 10, 150 + 420 / 8 * (8-gameState.floor), 20,20,'green').addToPieces(pieces);
+    new FastGP('marker', 'marker', 25 + 60 / 2 - 10, 150 + 480 / gameState.maxFloor * (gameState.maxFloor-gameState.floor), 20,20,'green').addToPieces(pieces);
 
     return pieces.getPiece('hero')
 }
 
-let sandboxLevel = function (gameState,pieces) {
-    gameState.floorStarted = true;
-    let hero = initializeLevel(gameState, pieces);
-    hero.sprite.x = 120;
-    hero.sprite.y = 550;
-
-    new Heart('h1', 400, 150).addToPieces(pieces);
-}
-// Sandbox
-// let testlevel12 = function (gameState,pieces) {
+// Levels
+// let Sandbox = function (gameState,pieces) {
 
 //     let hero = initializeLevel(gameState, pieces);
-//     hero.sprite.x = 300;
-//     hero.sprite.y = 300;
+//     hero.sprite.x = 120;
+//     hero.sprite.y = 550;
+
+//     //test items
+//     new FastGP('i_green', 'item', 300, 300, 20, 20, 'green').addToPieces(pieces);
+//     new FastGP('i_orange', 'item', 400, 300, 20, 20, 'orange').addToPieces(pieces);
+
+//     new FastGP('e_white', 'enemy', 500, 400, 20, 20, 'white').addToPieces(pieces);
+
+//     new SwordItem('i_sword_1', 350, 350).addToPieces(pieces);
+//     new SwordItem('i_sword_2', 200, 350).addToPieces(pieces);
+//     new Move('i_purple', 200, 300, 20, 20, 'purple').addToPieces(pieces);
+//     new Move('i_blue', 200, 200, 20, 20, 'blue').addToPieces(pieces);
+
+//     // Enemies
+//     // var a = new Enemy('e_red', 'enemy', 150, 200, 20, 20, 'red', 'horizontal').addToPieces(pieces);
+//     var b = new Enemy('e_purple', 'enemy', 250, 200, 20, 20, 'purple', 'vertical', 200, 5).addToPieces(pieces);
+
 //     new Heart('h1', 400, 150).addToPieces(pieces);
-//     new Heart('h2', 300, 150).addToPieces(pieces);
-//     new SwordItem('s1',200, 200).addToPieces(pieces);
-    
-//     new Enemy('e_12_1', 'enemy', 300, 500, 20, 20, 'grey', 'horizontal').addToPieces(pieces);
-//     new Enemy('e_12_1', 'enemy', 300, 500, 20, 20, 'grey', 'vertical').addToPieces(pieces);
-
 //     new Stairs('stair1', 300, 520).addToPieces(pieces);
-    
+
 // }
-
-
-// Levels
-let testlevel12 = function (gameState,pieces) {
-
-    let hero = initializeLevel(gameState, pieces);
-    hero.sprite.x = 120;
-    hero.sprite.y = 550;
-
-    //test items
-    new FastGP('i_green', 'item', 300, 300, 20, 20, 'green').addToPieces(pieces);
-    new FastGP('i_orange', 'item', 400, 300, 20, 20, 'orange').addToPieces(pieces);
-
-    new FastGP('e_white', 'enemy', 500, 400, 20, 20, 'white').addToPieces(pieces);
-
-    new SwordItem('i_sword_1', 350, 350).addToPieces(pieces);
-    new SwordItem('i_sword_2', 200, 350).addToPieces(pieces);
-    new Move('i_purple', 200, 300, 20, 20, 'purple').addToPieces(pieces);
-    new Move('i_blue', 200, 200, 20, 20, 'blue').addToPieces(pieces);
-
-    // Enemies
-    // var a = new Enemy('e_red', 'enemy', 150, 200, 20, 20, 'red', 'horizontal').addToPieces(pieces);
-    var b = new Enemy('e_purple', 'enemy', 250, 200, 20, 20, 'purple', 'vertical', 200, 5).addToPieces(pieces);
-
-    new Heart('h1', 400, 150).addToPieces(pieces);
-    new Stairs('stair1', 300, 520).addToPieces(pieces);
-
-}
 
 // depression level - need to change hero speed to slow
 let level8 = function (gameState,pieces) { 
@@ -190,18 +160,6 @@ let level7 = function (gameState,pieces) {
     new Stairs('stair1', 550, 330).addToPieces(pieces);
 }
 
-function genMove(num){
-    let items = [{}];
-    for(let i; i < num; i++) {
-        items.push(new Move(`b${num}`,))
-    }
-}
-
-function wallBox(){
-    for(let i; i < num; i++) {
-        items.push(new Wall(`w${num}`,))
-    }
-}
 // blocks stuck in wall to hide shortcuts
 let level6 = function (gameState,pieces) { 
     gameState.floorStarted = true;
@@ -209,53 +167,88 @@ let level6 = function (gameState,pieces) {
     hero.sprite.x = 120;
     hero.sprite.y = 400;
 
-    new Move('b0', 500, 550, 20, 20, 'grey').addToPieces(pieces);
-    //inner walls
-    new Wall('w10','h', 280, 270, 90).addToPieces(pieces);
+    const walls = [
+        {a:'h', x:280, y:270, l: 90},
 
-    new Wall('w11','h', 280, 350, 80).addToPieces(pieces);
-    new Wall('w12','v', 280, 280, 80).addToPieces(pieces);
-    new Wall('w13','v', 350, 280, 50).addToPieces(pieces);
-       // outer walls
-    new Wall('w14','v', 310, 230, 40).addToPieces(pieces);
-    new Wall('w15','v', 310, 360, 30).addToPieces(pieces);
-    new Wall('w16','h', 360, 310, 40).addToPieces(pieces);
-    new Wall('w17','h', 240, 310, 40).addToPieces(pieces);
+        {a:'h', x:280, y:350, l: 80},
+        {a:'v', x:280, y:280, l: 80},
+        {a:'v', x:350, y:280, l: 50},
 
-    new Wall('w18','v', 400, 220, 190).addToPieces(pieces);
-    new Wall('w18','h', 400, 220, 190).addToPieces(pieces);
+        {a:'v', x:310, y:230, l: 40},
+        {a:'v', x:310, y:360, l: 30},
+        {a:'h', x:360, y:310, l: 50},
+        {a:'h', x:240, y:310, l: 40},
 
-    new Move('w10-b1', 320, 260, 20, 20, 'grey').addToPieces(pieces);
-    new Move('w10-b2', 290, 260, 20, 20, 'grey').addToPieces(pieces);
+        {a:'v', x:410, y:220, l: 200},
+        {a:'h', x:220, y:410, l: 190},
+        {a:'h', x:270, y:210, l: 50},
+        {a:'h', x:340, y:210, l: 40},
+        {a:'h', x:240, y:210, l: 10},
 
-    new Move('w11-b1', 330, 350, 20, 20, 'grey').addToPieces(pieces);
-    new Move('w11-b2', 300, 350, 20, 20, 'grey').addToPieces(pieces);
+        {a:'v', x:240, y:170, l: 50},
+        {a:'v', x:370, y:170, l: 50},
+        {a:'v', x:240, y:420, l: 50},
+        {a:'v', x:370, y:420, l: 50},
+        {a:'h', x:240, y:470, l: 140},
+        {a:'h', x:240, y:160, l: 140},
+        {a:'v', x:210, y:230, l: 190},
 
-    
-    new Move('w12-b1', 350, 330, 20, 20, 'grey').addToPieces(pieces);
-    new Move('w12-b2', 350, 300, 20, 20, 'grey').addToPieces(pieces);
-    new Move('w12-b3', 350, 270, 20, 20, 'grey').addToPieces(pieces);
+    ]
 
-    new Move('w13-b1', 270, 340, 20, 20, 'grey').addToPieces(pieces);
-    new Move('w13-b2', 270, 310, 20, 20, 'grey').addToPieces(pieces);
-    new Move('w13-b3', 270, 280, 20, 20, 'grey').addToPieces(pieces);
+    walls.forEach((e,i) => new Wall(`w1${i}`,e.a,e.x, e.y, e.l).addToPieces(pieces))
+    const MoveCoors = [
+        {x:320, y:260},
+        {x:290, y:260},
 
-    
-    new Move('b1', 350, 330, 20, 20, 'grey').addToPieces(pieces);
-    new Move('b2', 350, 300, 20, 20, 'grey').addToPieces(pieces);
-    new Move('b3', 350, 270, 20, 20, 'grey').addToPieces(pieces);
+        {x:330, y:350},
+        {x:300, y:350},
 
- 
+        {x:350, y:300},
+        {x:350, y:300},
+        {x:350, y:270},
 
-    new Move('w18-b1', 300, 230, 20, 20, 'grey').addToPieces(pieces);
-    new Move('w19-b1', 310, 380, 20, 20, 'grey').addToPieces(pieces);
-    new Move('w20-b1', 380, 300, 20, 20, 'grey').addToPieces(pieces);
-    new Move('w21-b1', 240, 310, 20, 20, 'grey').addToPieces(pieces);
-    
+        {x:270, y:340},
+        {x:270, y:310},
+        {x:270, y:280},
 
+        {x:320, y:260},
+        {x:320, y:260},
+        {x:320, y:260},
 
-    // multiple block generator
-    
+        {x:350, y:330},
+        {x:350, y:300},
+        {x:350, y:270},
+
+        {x:300, y:220},
+        {x:310, y:390},
+        {x:390, y:300},
+        {x:220, y:310},
+
+        {x:380,y:200},
+        {x:400,y:210},
+        {x:320,y:200},
+        {x:350,y:200},
+        {x:280,y:200},
+        {x:250,y:200},
+        {x:220,y:200},
+
+        {x:330,y:400},
+        {x:360,y:400},
+        {x:280,y:400},
+        {x:240,y:400},
+
+        {x:410,y:230},
+        {x:410,y:270},
+        {x:410,y:350},
+        {x:410,y:400},
+
+        {x:210,y:210},
+        {x:210,y:270},
+        {x:210,y:350},
+        {x:210,y:400},
+    ]
+
+    MoveCoors.forEach((m,i) => new Move(`m1${i}`,m.x,m.y,20, 20, 'grey').addToPieces(pieces))
 
     new Stairs('stair1', 300, 300).addToPieces(pieces);
 
@@ -277,24 +270,104 @@ let level5 = function (gameState,pieces) {
 
 }
 
+let level4 = function (gameState, pieces) {
+    let hero = initializeLevel(gameState, pieces);
+    hero.sprite.x = 340;
+    hero.sprite.y = 550;
 
+    new Wall('w_1', 'v', 345, 100, 440).addToPieces(pieces);
+
+    let ii = 0;
+    for (ii=0;ii<=10;ii++) {
+        new Enemy('e'+ii, 'enemy', 220, 200+40*ii, 20, 20, 'red', 'horizontal', 100,ii+1).addToPieces(pieces);
+    }
+    for (ii=0; ii <= 10; ii++) {
+        new Enemy('e' + ii+10, 'enemy', 460, 200 + 40 * ii, 20, 20, 'red', 'horizontal', 100, 10-(ii)).addToPieces(pieces);
+    }
+
+    new Stairs('stair1', 220, 120).addToPieces(pieces);
+    new SwordItem('sw1', 460, 120).addToPieces(pieces);
+}
+
+let level3 = function (gameState, pieces) {
+    let hero = initializeLevel(gameState, pieces);
+    hero.sprite.x = 565;
+    hero.sprite.y = 565;
+
+    let ii = 0;
+    let jj = 0;
+    let levelWalls = {};
+    for (ii=0; ii <= 10; ii++) {
+        for (jj=0; jj <= 10; jj++) {
+            new Enemy(jj +'e' + ii , 'enemy', 120 + 60 * ii, 120 + 60 * jj, 20, 20, 'red', ((ii+jj)%2===0) ? 'horizontal':'vertical', 10, 5).addToPieces(pieces);
+        }
+    }
+
+    new Wall('w_1', 'h', 145, 220, 400).addToPieces(pieces);
+    levelWalls['w_1'] = pieces.getPiece('w_1');
+    pieces.getPiece('w_1').renderMe = false;
+
+    new Heart('h1', 153, 253).addToPieces(pieces);
+    new Heart('h2', 203, 403).addToPieces(pieces);
+    new SwordItem('sw1', 140, 120).addToPieces(pieces);
+
+    new Stairs('stair1', 110, 145).addToPieces(pieces);
+}
 
 
 let level2 = function (gameState,pieces) { 
     let hero = initializeLevel(gameState, pieces);
     hero.sprite.x = 120;
-    hero.sprite.y = 400;
+    hero.sprite.y = 120;
 
-    new Stairs('stair1', 300, 300).addToPieces(pieces);
+    new Stairs('stair1', 335, 455).addToPieces(pieces);
+    new Wall('w_1', 'h', 100, 150, 450).addToPieces(pieces);
+    new Wall('w_2', 'v', 550, 150, 400).addToPieces(pieces);
+    new Wall('w_3', 'v', 480, 200, 400).addToPieces(pieces);
+    new Wall('w_4', 'h', 100, 200, 300).addToPieces(pieces);
+
+
+    new Enemy('e1', 'enemy', 150, 125, 20, 20, 'red', 'vertical').addToPieces(pieces);
+    new Enemy('e2', 'enemy', 150, 175, 20, 20, 'red', 'vertical',).addToPieces(pieces);
+    new Enemy('e3', 'enemy', 250, 175, 20, 20, 'red', 'vertical').addToPieces(pieces);
+    new Enemy('e4', 'enemy', 350, 175, 20, 20, 'red', 'vertical').addToPieces(pieces);
+    new SwordItem('sw1', 110, 165).addToPieces(pieces);
+    new Heart('h2', 200, 165).addToPieces(pieces);
+    new Enemy('e5', 'enemy', 360, 400, 20, 20, 'red', 'vertical', 0, 0).addToPieces(pieces);
+    new Heart('h3', 250, 350).addToPieces(pieces);
+
+    let ii,jj;
+    for (ii = 0; ii < 10; ii++) {
+        for (jj = 0; jj < 10; jj++) {
+            new Move(jj+'b'+ii, 220+ii*20, 300+jj*20, 20, 20, 'grey').addToPieces(pieces);
+        }
+    }
 
 }
 
 let level1 = function (gameState,pieces) { 
     let hero = initializeLevel(gameState, pieces);
-    hero.sprite.x = 120;
-    hero.sprite.y = 400;
+    hero.sprite.x = 550;
+    hero.sprite.y = 120;
+    new SwordItem('sw1', 510, 125).addToPieces(pieces);
 
-    new Stairs('stair1', 300, 300).addToPieces(pieces);
+    let ii;
+    for (ii=0;ii<10;ii++) {
+        new Stairs('stair'+ii, 120+48*ii, 550).addToPieces(pieces);
+        if (ii != 0) {
+            new Enemy('e' + ii, 'enemy', 520-ii*40, 125, 20, 20, 'red', 'vertical', 0, 0).addToPieces(pieces);
+        }
+        new Enemy('1e' + ii, 'enemy', 570 - ii * 48, 500, 20, 20, 'red', 'vertical', 0, 0).addToPieces(pieces);
+        //new Enemy('2e' + ii, 'enemy', 580 - ii * 40, 525, 20, 20, 'red', 'vertical', 0, 0).addToPieces(pieces);
+        new Enemy('2e' + ii, 'enemy', 546 - ii * 48, 500, 20, 20, 'red', 'vertical', 0, 0).addToPieces(pieces);
+        new Wall(ii + 'w', 'v', 105 + ii * 48, 525, 100).addToPieces(pieces);
+        if (ii !== 6) {
+            new Wall(ii + 'w2', 'h', 105 + ii * 48, 525, 50).addToPieces(pieces);
+            pieces.getPiece(ii + 'w2').renderMe = false;
+        }
+    }
+
+    new Wall('w_1', 'h', 150, 150, 550).addToPieces(pieces);
 
 }
 
