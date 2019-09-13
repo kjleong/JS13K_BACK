@@ -112,6 +112,7 @@ let runGameLoopUpdate = function(gameState,pieces) {
       if(swordPiece.sprite.collidesWith(enemy.sprite)) {
         enemy.kill();
         gameState.enemiesKilled += 1;
+        hero.sprite.swordHealth -= 1; // sword vitality
       }
     }
   }
@@ -140,7 +141,6 @@ let runGameLoopUpdate = function(gameState,pieces) {
     } else {
       swordPiece.kill();
       hero.sprite.attack = false;
-      hero.sprite.swordHealth -= 1; // sword vitality
       gameState.swordHealth = hero.sprite.swordHealth;
       swordPiece.renderTime = 0.5;
     }
