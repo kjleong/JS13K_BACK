@@ -69,7 +69,7 @@ let backStory = function () {
   ctx.fillText("In this game, you've most definitely defeated the boss.", indent, 50);
   ctx.fillText("You just need to go back down the tower to go home,", indent, 100);
   ctx.fillText("buy groceries and walk your dog.", indent, 150);
-  ctx.fillText("Unfotunately, you've used a cheat code to get to the boss", indent, 250);
+  ctx.fillText("Unfortunately, you've used a cheat code to get to the boss", indent, 250);
   ctx.fillText("and all of the enemies and traps are still there.", indent, 300);
   ctx.fillText("Too bad the cheat code was a one-way ticket.", indent, 350);
   ctx.fillText("It was bought from a shady cube.", indent, 400);
