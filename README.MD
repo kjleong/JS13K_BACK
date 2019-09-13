@@ -21,5 +21,5 @@ npm install kontra
 
 
 ## Credits
-Quang-Thuy Hoang (https://github.com/quangthuyhoang)
-Kevin Leong (https://github.com/kjleong)
+- Quang-Thuy Hoang (https://github.com/quangthuyhoang)
+- Kevin Leong (https://github.com/kjleong)

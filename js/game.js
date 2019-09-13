@@ -176,6 +176,8 @@ let loop = GameLoop({  // create the main game loop
     switch(gameState.state) {
       case 'menu':
         break;
+      case 'backstory':
+        break;
       case 'game':
         runGameLoopUpdate(gameState,pieces);
         break
@@ -189,6 +191,9 @@ let loop = GameLoop({  // create the main game loop
     switch (gameState.state) {
       case 'menu':
         showMenu();
+        break;
+      case 'backstory':
+        backStory();
         break;
       case 'game':
         pieces.renderAll();
