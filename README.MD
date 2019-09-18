@@ -21,5 +21,5 @@ npm install kontra
 
 
 ## Credits
-- Quang-Thuy Hoang (https://github.com/quangthuyhoang)
+- Quang-Thuy Hoang (https://github.com/quangthuyhoang, submission from https://github.com/quangthuyhoang/JS13K_BACK)
 - Kevin Leong (https://github.com/kjleong)
